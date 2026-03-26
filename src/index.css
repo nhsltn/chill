@@ -32,6 +32,12 @@
   --color-input-border: #e7e3fc38;
   --color-input-field-bg: #e7e3fc0a;
   --color-chip-bg: #e7e3fc14;
+  --color-auth-card: #181a1cd6;
+  --color-extra: #3d4142;
+
+  /* Background Images */
+  --bg-login: url("/assets/images/bg-login.jpg");
+  --bg-register: url("/assets/images/bg-register.jpg");
 }
 
 @layer utilities {
