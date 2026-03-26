@@ -3,6 +3,35 @@
 
 @theme {
   --font-sans: "Lato", sans-serif;
+
+  /* Colors */
+
+  /* Main */
+  --color-primary: #3254ff;
+  --color-primary-1: #243fdb;
+  --color-primary-2: #192db7;
+  --color-primary-3: #0f1e93;
+  --color-primary-4: #09147a;
+
+  /* Text Dark */
+  --color-text-dark-primary: #3a3541de;
+  --color-text-dark-secondary: #3a3541ad;
+  --color-text-dark-disabled: #3a354161;
+
+  /* Text Light */
+  --color-text-light-primary: #e7e3fcde;
+  --color-text-light-secondary: #e7e3fcad;
+  --color-text-light-disabled: #e7e3fc61;
+
+  /* Other */
+  --color-paper-bg: #22282a;
+  --color-body-bg: #2f3334;
+  --color-page-header-bg: #181a1c;
+  --color-extra-bg: #3d4142;
+  --color-outline-border: #e7e3fc3b;
+  --color-input-border: #e7e3fc38;
+  --color-input-field-bg: #e7e3fc0a;
+  --color-chip-bg: #e7e3fc14;
 }
 
 @layer utilities {
