@@ -1,1 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Lato", sans-serif;
+}
+
+@layer utilities {
+  .heading-1 {
+    font-size: 48px;
+    font-weight: 700;
+  }
+  .heading-2 {
+    font-size: 40px;
+    font-weight: 700;
+  }
+  .heading-3 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .heading-4 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .heading-5 {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .heading-6 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .body-lg-bold {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .body-lg-semibold {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .body-lg-medium {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .body-lg-regular {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .body-md-bold {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .body-md-semibold {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .body-md-medium {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .body-md-regular {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .body-sm-bold {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .body-sm-semibold {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .body-sm-medium {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .body-sm-regular {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .caption-1-bold {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .caption-1-semibold {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .caption-1-medium {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .caption-1-regular {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .caption-2-bold {
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .caption-2-semibold {
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .caption-2-medium {
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .caption-2-regular {
+    font-size: 10px;
+    font-weight: 400;
+  }
+}
