@@ -27,7 +27,7 @@ function Login() {
               Daftar
             </a>
           </p>
-          <a href="#" className="text-text-light-primary">
+          <a href="/forgot-password" className="text-text-light-primary">
             Lupa kata sandi?
           </a>
         </div>
