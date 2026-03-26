@@ -16,7 +16,7 @@ function Register() {
           type="password"
           placeholder="Masukkan kata sandi"
         />
-        <div className="flex justify-between w-full body-medium-regular text-text-light-secondary -mt-7">
+        <div className="flex justify-between w-full text-[10px] xl:text-base text-text-light-secondary -mt-4 xl:-mt-7">
           <p>
             Sudah punya akun?{" "}
             <a href="/login" className="text-text-light-primary">

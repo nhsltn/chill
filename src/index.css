@@ -41,38 +41,4 @@
 }
 
 @layer utilities {
-  .heading-1 {
-    font-size: 48px;
-  }
-  .heading-2 {
-    font-size: 40px;
-  }
-  .heading-3 {
-    font-size: 32px;
-  }
-  .heading-4 {
-    font-size: 24px;
-  }
-  .heading-5 {
-    font-size: 20px;
-  }
-  .heading-6 {
-    font-size: 18px;
-  }
-
-  .body-lg {
-    font-size: 18px;
-  }
-  .body-md {
-    font-size: 16px;
-  }
-  .body-sm {
-    font-size: 14px;
-  }
-  .caption-1 {
-    font-size: 12px;
-  }
-  .caption-2 {
-    font-size: 10px;
-  }
 }

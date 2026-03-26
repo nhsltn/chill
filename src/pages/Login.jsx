@@ -7,7 +7,7 @@ function Login() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-[image:var(--bg-login)] bg-cover h-screen flex items-center justify-center">
+    <div className="bg-[image:var(--bg-login)] bg-center bg-cover h-screen flex items-center justify-center">
       <AuthCard
         title="Masuk"
         subtitle="Selamat datang kembali!"
@@ -20,7 +20,7 @@ function Login() {
           type="password"
           placeholder="Masukkan kata sandi"
         />
-        <div className="flex justify-between w-full body-medium-regular text-text-light-secondary -mt-7">
+        <div className="flex justify-between w-full text-[10px] xl:text-base text-text-light-secondary -mt-4 xl:-mt-7">
           <p>
             Belum punya akun?{" "}
             <a href="/register" className="text-text-light-primary">
