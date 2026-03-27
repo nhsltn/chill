@@ -39,9 +39,19 @@
   /* Background Images */
   --bg-login: url("/assets/images/bg-login.jpg");
   --bg-register: url("/assets/images/bg-register.jpg");
+  --bg-hero: url("/assets/images/bg-hero.png");
 }
 
 @layer utilities {
+  .bg-hero-mobile {
+    background-image:
+      linear-gradient(to bottom, #00000000, #181a1c), var(--bg-hero);
+  }
+
+  .bg-hero-desktop {
+    background-image:
+      linear-gradient(to bottom, #00000000, #10121386, #181a1c), var(--bg-hero);
+  }
 }
 
 @layer base {
