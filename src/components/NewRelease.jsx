@@ -2,43 +2,40 @@ import React from "react";
 import MoviesCard from "./MoviesCard";
 import ArrowButton from "./ArrowButton";
 
-function TopRating() {
+function NewRelease() {
   const movies = [
     {
-      id: 1,
-      thumbnail: "/assets/images/movie-1.png",
+      id: 11,
+      thumbnail: "/assets/images/movie-11.png",
+      title: "The Little Mermaid",
+    },
+    {
+      id: 12,
+      thumbnail: "/assets/images/movie-12.png",
+      title: "Duty After School",
       isNew: true,
-      title: "Suzume",
     },
     {
-      id: 2,
-      thumbnail: "/assets/images/movie-2.png",
-      title: "Jurassic World Dominion",
+      id: 13,
+      thumbnail: "/assets/images/movie-13.png",
+      title: "Big Hero 6",
     },
     {
-      id: 3,
-      thumbnail: "/assets/images/movie-3.png",
-      title: "Sonic the Hedgehog 2",
-    },
-    {
-      id: 4,
-      thumbnail: "/assets/images/movie-4.png",
+      id: 14,
+      thumbnail: "/assets/images/movie-14.png",
       isNew: true,
       title: "All of Us Are Dead",
     },
     {
-      id: 5,
-      thumbnail: "/assets/images/movie-5.png",
-      title: "Big Hero 6",
+      id: 15,
+      thumbnail: "/assets/images/movie-15.png",
+      title: "Missing",
     },
   ];
-
   return (
-    <div className="top-rating-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
+    <div className="new-release-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
       <div className="w-full max-w-7xl container flex flex-col gap-5 lg:gap-8 pl-5 lg:pl-0">
-        <h3 className="lg:text-[32px] text-[20px] font-bold">
-          Top Rating Film dan Series Hari Ini
-        </h3>
+        <h3 className="lg:text-[32px] text-[20px] font-bold">Film Trending</h3>
 
         <div className="lg:hidden w-full overflow-x-auto scrollbar-hide">
           <div className="flex gap-4">
@@ -66,4 +63,4 @@ function TopRating() {
   );
 }
 
-export default TopRating;
+export default NewRelease;

@@ -2,43 +2,38 @@ import React from "react";
 import MoviesCard from "./MoviesCard";
 import ArrowButton from "./ArrowButton";
 
-function TopRating() {
+function TrendingMovie() {
   const movies = [
     {
-      id: 1,
-      thumbnail: "/assets/images/movie-1.png",
-      isNew: true,
-      title: "Suzume",
+      id: 6,
+      thumbnail: "/assets/images/movie-6.png",
+      title: "The Tomorrow War",
     },
     {
-      id: 2,
-      thumbnail: "/assets/images/movie-2.png",
-      title: "Jurassic World Dominion",
+      id: 7,
+      thumbnail: "/assets/images/movie-7.png",
+      title: "Ant-Man and the Wasp: Quantumania",
     },
     {
-      id: 3,
-      thumbnail: "/assets/images/movie-3.png",
-      title: "Sonic the Hedgehog 2",
+      id: 8,
+      thumbnail: "/assets/images/movie-8.png",
+      title: "Guardians of the Galaxy Vol. 3",
     },
     {
-      id: 4,
-      thumbnail: "/assets/images/movie-4.png",
-      isNew: true,
-      title: "All of Us Are Dead",
+      id: 9,
+      thumbnail: "/assets/images/movie-9.png",
+      title: "A Man Called Otto",
     },
     {
-      id: 5,
-      thumbnail: "/assets/images/movie-5.png",
-      title: "Big Hero 6",
+      id: 10,
+      thumbnail: "/assets/images/movie-10.png",
+      title: "The Little Mermaid",
     },
   ];
-
   return (
-    <div className="top-rating-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
+    <div className="trending-movie-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
       <div className="w-full max-w-7xl container flex flex-col gap-5 lg:gap-8 pl-5 lg:pl-0">
-        <h3 className="lg:text-[32px] text-[20px] font-bold">
-          Top Rating Film dan Series Hari Ini
-        </h3>
+        <h3 className="lg:text-[32px] text-[20px] font-bold">Film Trending</h3>
 
         <div className="lg:hidden w-full overflow-x-auto scrollbar-hide">
           <div className="flex gap-4">
@@ -66,4 +61,4 @@ function TopRating() {
   );
 }
 
-export default TopRating;
+export default TrendingMovie;
