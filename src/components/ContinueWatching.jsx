@@ -1,6 +1,6 @@
 import React from "react";
 import ContinueCard from "./ContinueCard";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import ArrowButton from "./ArrowButton";
 
 function ContinueWatching() {
   const movies = [
@@ -32,7 +32,7 @@ function ContinueWatching() {
   ];
 
   return (
-    <div className="continue-section flex flex-col w-full items-center text-white pt-10 lg:pt-30">
+    <div className="continue-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
       <div className="w-full max-w-7xl container flex flex-col gap-5 lg:gap-8 pl-5 lg:pl-0">
         <h3 className="lg:text-[32px] text-[20px] font-bold">
           Melanjutkan Tonton Film
@@ -49,9 +49,8 @@ function ContinueWatching() {
         </div>
 
         <div className="hidden lg:block relative">
-          <button className="flex items-center absolute -left-5 top-1/2 -translate-y-1/2 bg-body-bg p-2.5 rounded-3xl size-11 text-white z-10">
-            <MdChevronLeft size={24} />
-          </button>
+          <ArrowButton direction="left" />
+          <ArrowButton direction="right" />
           <div className="flex gap-6">
             {movies.map((movie) => (
               <div key={movie.id}>
@@ -59,9 +58,6 @@ function ContinueWatching() {
               </div>
             ))}
           </div>
-          <button className="flex items-center absolute -right-5 top-1/2 -translate-y-1/2 bg-body-bg p-2.5 rounded-3xl size-11 text-white z-10">
-            <MdChevronRight size={24} />
-          </button>
         </div>
       </div>
     </div>
