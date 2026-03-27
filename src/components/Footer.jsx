@@ -226,7 +226,7 @@ function Footer() {
     </div>
   );
   return (
-    <footer className="footer bg-page-header-bg w-full bt-1 border-outline-border p-5 lg:py-15 lg:px-20 font-poppins text-text-light-secondary text-xs lg:text-base font-medium">
+    <footer className="footer bg-page-header-bg w-full border-t border-outline-border p-5 lg:py-15 lg:px-20 font-poppins text-text-light-secondary text-xs lg:text-base font-medium">
       <div className="footer-content flex justify-center lg:justify-between flex-col lg:flex-row xs:gap-10">
         <div className="footer-logo flex flex-col gap-6.5">
           <img
