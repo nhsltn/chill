@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
-function InputField({ label, type = "text", placeholder }) {
+function InputField({ label, type = "text", placeholder, value, onChange }) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
   const inputType = isPassword && showPassword ? "text" : type;
@@ -16,6 +16,8 @@ function InputField({ label, type = "text", placeholder }) {
           type={inputType}
           placeholder={placeholder}
           className="outline-none text-text-light-secondary text-[9.24px] xl:text-base w-full bg-transparent"
+          value={value}
+          onChange={onChange}
         />
         {isPassword && (
           <button
