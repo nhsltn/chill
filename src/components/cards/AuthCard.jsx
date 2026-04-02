@@ -5,13 +5,13 @@ function AuthCard({ title, subtitle, submitLabel, children, onSubmit }) {
   return (
     <form className="flex w-76.5 xl:w-132.25 bg-auth-card rounded-lg xl:rounded-2xl p-6 xl:p-10 flex-col items-center gap-5 xl:gap-9">
       <img
-        src="../../public/assets/images/logo-chill.png"
+        src="/assets/images/logo-chill.png"
         alt="logo"
         className="w-23.6 xl:w-auto h-6 xl:h-auto"
       />
       <div className="flex flex-col items-center xl:gap-2 gap-[4.62px] text-text-light-primary">
         <h3 className="text-lg xl:text-[32px] font-bold">{title}</h3>
-        <p className="text-[10ox] xl:text-lg">{subtitle}</p>
+        <p className="text-[10px] xl:text-lg">{subtitle}</p>
       </div>
       {children}
       <div className="button-group w-full flex flex-col items-center gap-1 xl:gap-2">

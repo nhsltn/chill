@@ -1,6 +1,7 @@
 import React from "react";
-import AuthCard from "../components/AuthCard";
-import InputField from "../components/InputField";
+import { Link } from "react-router-dom";
+import AuthCard from "../components/cards/AuthCard";
+import InputField from "../components/ui/InputField";
 function Register() {
   return (
     <div className="bg-(image:--bg-register) bg-cover bg-bottom h-screen flex items-center justify-center">
@@ -19,9 +20,9 @@ function Register() {
         <div className="flex justify-between w-full text-[10px] xl:text-base text-text-light-secondary -mt-4 xl:-mt-7">
           <p>
             Sudah punya akun?{" "}
-            <a href="/login" className="text-text-light-primary">
+            <Link to="/login" className="text-text-light-primary">
               Masuk
-            </a>
+            </Link>
           </p>
         </div>
       </AuthCard>

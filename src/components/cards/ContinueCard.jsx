@@ -3,7 +3,7 @@ import { MdStar } from "react-icons/md";
 
 function ContinueCard({ title, rating, thumbnail, isNew }) {
   return (
-    <div className="relative rounded-[4.37px] lg:rounded-lg w-77.25 h-37.75 lg:w-75.5 lg:h-40.5 overflow-hidden cursor-pointer">
+    <div className="continue-card relative rounded-[4.37px] lg:rounded-lg w-77.25 h-37.75 lg:w-full lg:h-40.5 overflow-hidden cursor-pointer">
       <img src={thumbnail} alt={title} className="object-cover" />
       <div
         className="absolute inset-0"
