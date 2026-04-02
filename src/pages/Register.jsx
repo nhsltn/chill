@@ -10,6 +10,8 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!username || !password || !confirmPassword) {
@@ -22,7 +24,6 @@ function Register() {
       return;
     }
 
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
     const newId =
       existingUsers.length > 0
         ? existingUsers[existingUsers.length - 1].id + 1
