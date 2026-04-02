@@ -1,5 +1,5 @@
 import React from "react";
-import ContinueCard from "./ContinueCard";
+import ContinueCard from "../cards/ContinueCard";
 import ArrowButton from "./ArrowButton";
 
 function ContinueWatching() {

@@ -1,5 +1,5 @@
 import React from "react";
-import MoviesCard from "./MoviesCard";
+import MoviesCard from "../cards/MoviesCard";
 import ArrowButton from "./ArrowButton";
 
 function TopRating() {

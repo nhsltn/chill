@@ -1,6 +1,6 @@
 import React from "react";
 import AuthCard from "../components/AuthCard";
-import InputField from "../components/InputField";
+import InputField from "../components/ui/InputField";
 function Register() {
   return (
     <div className="bg-(image:--bg-register) bg-cover bg-bottom h-screen flex items-center justify-center">

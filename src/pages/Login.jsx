@@ -1,6 +1,6 @@
 import React from "react";
 import AuthCard from "../components/AuthCard";
-import InputField from "../components/InputField";
+import InputField from "../components/ui/InputField";
 import { useNavigate } from "react-router-dom";
 
 function Login() {

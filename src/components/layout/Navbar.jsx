@@ -1,5 +1,5 @@
 import React from "react";
-import AvatarDropdown from "./AvatarDropdown";
+import AvatarDropdown from "../cards/AvatarDropdown";
 function Navbar() {
   return (
     <nav className="navbar w-full flex justify-between py-1.5 lg:py-6.25 px-5 lg:px-20 bg-page-header-bg">
