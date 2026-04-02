@@ -1,4 +1,3 @@
-// components/navbar/AvatarDropdown.jsx
 import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiArrowRightOnRectangle } from "react-icons/hi2";

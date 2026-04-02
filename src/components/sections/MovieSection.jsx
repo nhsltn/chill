@@ -1,6 +1,4 @@
 /* eslint-disable no-unused-vars */
-// src/components/MovieSection.jsx
-
 import React from "react";
 import ArrowButton from "../ui/ArrowButton";
 

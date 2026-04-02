@@ -1,11 +1,13 @@
 import React from "react";
-import AvatarDropdown from "../cards/AvatarDropdown";
+import AvatarDropdown from "./AvatarDropdown";
+import { navLinks } from "../../data/links";
+import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <nav className="navbar w-full flex justify-between py-1.5 lg:py-6.25 px-5 lg:px-20 bg-page-header-bg">
       <ul className="flex gap-3 lg:gap-20 items-center text-white font-medium text-[10px] lg:text-lg">
         <li>
-          <a href="/" className="flex h-11 gap-1 items-center">
+          <Link to="/" className="flex h-11 gap-1 items-center">
             <svg
               viewBox="0 0 30 26"
               fill="none"
@@ -28,17 +30,13 @@ function Navbar() {
                 fill="white"
               />
             </svg>
-          </a>
+          </Link>
         </li>
-        <li>
-          <a href="/series">Series</a>
-        </li>
-        <li>
-          <a href="/movies">Film</a>
-        </li>
-        <li>
-          <a href="/my-list">Daftar Saya</a>
-        </li>
+        {navLinks.map((link) => (
+          <li key={link.to}>
+            <Link to={link.to}>{link.label}</Link>
+          </li>
+        ))}
       </ul>
       <ul className="avatar gap-1 lg:gap-2 flex items-center text-white">
         <li>
