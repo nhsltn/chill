@@ -22,12 +22,12 @@ function MovieSection({ title, movies, CardComponent }) {
         </div>
 
         {/* Desktop */}
-        <div className="lg:block hidden relative gap-7">
-          <div className="flex gap-7">
+        <div className="lg:block hidden">
+          <div className="relative flex gap-7">
             <ArrowButton direction="left" />
             <ArrowButton direction="right" />
             {movies.map((movie) => (
-              <div key={movie.id}>
+              <div key={movie.id} className="flex-1">
                 <CardComponent {...movie} />
               </div>
             ))}
