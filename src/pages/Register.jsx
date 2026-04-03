@@ -33,7 +33,6 @@ function Register() {
       id: newId,
       username,
       password,
-      confirmPassword,
     };
 
     const updatedUsers = [...existingUsers, newUser];
