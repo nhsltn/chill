@@ -2,7 +2,7 @@ import React from "react";
 import AvatarDropdown from "./AvatarDropdown";
 import { navLinks } from "../../data/links";
 import { Link } from "react-router-dom";
-function Navbar() {
+function Navbar({ isLoggedIn, username }) {
   return (
     <nav className="navbar w-full flex justify-between py-1.5 lg:py-6.25 px-5 lg:px-20 bg-page-header-bg">
       <ul className="flex gap-3 lg:gap-20 items-center text-white font-medium text-[10px] lg:text-lg">
@@ -40,7 +40,7 @@ function Navbar() {
       </ul>
       <ul className="avatar gap-1 lg:gap-2 flex items-center text-white">
         <li>
-          <AvatarDropdown />
+          <AvatarDropdown isLoggedIn={isLoggedIn} username={username} />
         </li>
       </ul>
     </nav>
