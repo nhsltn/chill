@@ -18,7 +18,7 @@ function MoviesCard({
 
   return (
     <div
-      className="movie-card relative w-28 h-42 lg:w-full lg:h-91.25 overflow-hidden cursor-pointer lg:rounded-lg"
+      className="movie-card relative w-28 h-42 lg:w-full lg:h-91.25 overflow-hidden cursor-pointer lg:rounded-lg rounded-md"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
