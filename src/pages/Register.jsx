@@ -1,47 +1,30 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../components/cards/AuthCard";
 import InputField from "../components/ui/InputField";
+import { useAuthStore } from "../stores/authStore";
 
 function Register() {
   const navigate = useNavigate();
+  const { register, loading } = useAuthStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!username || !password || !confirmPassword) {
       toast.error("Semua field harus diisi!");
       return;
     }
-
     if (password !== confirmPassword) {
       toast.error("Kata sandi tidak cocok!");
       return;
     }
-
-    const newId =
-      existingUsers.length > 0
-        ? existingUsers[existingUsers.length - 1].id + 1
-        : 1;
-
-    const newUser = {
-      id: newId,
-      username,
-      password,
-    };
-
-    const updatedUsers = [...existingUsers, newUser];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
-    navigate("/login");
-    toast.success("Pendaftaran berhasil! Silakan masuk.");
+    register(username, password, navigate);
   };
 
   return (
