@@ -1,98 +1,113 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
-import {
-  topRatingMovies,
-  trendingMovies,
-  newReleaseMovies,
-  continueWatchingMovies,
-} from "../data/movies";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
+import { useAuthStore } from "../stores/authStore";
+import { useWatchlistStore } from "../stores/watchlistStore";
+import {
+  getTopRatedMovies,
+  getTopRatedTV,
+  getTrendingMovies,
+  getNewReleaseMovies,
+} from "../services/api/tmdb";
+import { continueWatchingMovies } from "../data/movies";
+
+const POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w780";
+
+const mapMovie = (movie, type) => ({
+  id: movie.id,
+  title: movie.title || movie.name,
+  thumbnail: `${POSTER_BASE_URL}${movie.poster_path}`,
+  backdrop: movie.backdrop_path
+    ? `${BACKDROP_BASE_URL}${movie.backdrop_path}`
+    : null,
+  isNew: false,
+  mediaType: type,
+  voteAverage: movie.vote_average,
+  releaseDate: movie.release_date || movie.first_air_date,
+  genreIds: movie.genre_ids,
+});
 
 function Home() {
-  const [auth, setAuth] = useState(() => {
-    const stored = localStorage.getItem("currentUser");
-    const user = stored ? JSON.parse(stored) : null;
-    return {
-      isLoggedIn: !!user,
-      user: user,
-    };
-  });
+  const { isLoggedIn, user } = useAuthStore();
+  const { fetchWatchlist, toggleWatchlist, isInWatchlist } =
+    useWatchlistStore();
 
-  const [watchlist, setWatchlist] = useState(() => {
-    if (!auth.user?.id) return [];
-    const stored = localStorage.getItem(`watchlist_${auth.user.id}`);
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [topRated, setTopRated] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [newRelease, setNewRelease] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (auth.user?.id) {
-      localStorage.setItem(
-        `watchlist_${auth.user.id}`,
-        JSON.stringify(watchlist),
-      );
+    if (isLoggedIn && user?.userId) {
+      fetchWatchlist(user.userId);
+    } else {
+      useWatchlistStore.getState().clearWatchlist();
     }
-  }, [watchlist, auth.user?.id]);
+  }, [isLoggedIn, user?.userId]);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const stored = localStorage.getItem("currentUser");
-      const user = stored ? JSON.parse(stored) : null;
-      setAuth({
-        isLoggedIn: !!user,
-        user: user,
-      });
+    const fetchMovies = async () => {
+      setLoading(true);
+      try {
+        const [topRatedMovieRes, topRatedTVRes, trendingRes, newReleaseRes] =
+          await Promise.all([
+            getTopRatedMovies(),
+            getTopRatedTV(),
+            getTrendingMovies(),
+            getNewReleaseMovies(),
+          ]);
 
-      if (user?.id) {
-        const userWatchlist = localStorage.getItem(`watchlist_${user.id}`);
-        setWatchlist(userWatchlist ? JSON.parse(userWatchlist) : []);
-      } else {
-        setWatchlist([]);
+        const topRatedCombined = [
+          ...topRatedMovieRes.data.results.map((m) => mapMovie(m, "movie")),
+          ...topRatedTVRes.data.results.map((m) => mapMovie(m, "tv")),
+        ]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 10);
+
+        setTopRated(topRatedCombined);
+        setTrending(
+          trendingRes.data.results
+            .map((m) => mapMovie(m, "movie"))
+            .slice(0, 10),
+        );
+        setNewRelease(
+          newReleaseRes.data.results
+            .map((m) => mapMovie(m, "movie"))
+            .slice(0, 10),
+        );
+      } catch (err) {
+        console.error("Gagal fetch movies:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    fetchMovies();
   }, []);
 
-  const toggleWatchlist = (movie) => {
-    if (!auth.isLoggedIn) {
-      toast.error("Silakan login lebih dulu untuk menambahkan watchlist");
-      return;
-    }
+  if (loading) {
+    return (
+      <div className="bg-page-header-bg min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
-    const exists = watchlist.find((item) => item.id === movie.id); // ⬅️ cek di luar
-
-    if (exists) {
-      toast.success(`${movie.title} dihapus dari watchlist`);
-      setWatchlist((prev) => prev.filter((item) => item.id !== movie.id));
-    } else {
-      toast.success(`${movie.title} ditambahkan ke watchlist`);
-      setWatchlist((prev) => [
-        ...prev,
-        {
-          id: movie.id,
-          thumbnail: movie.thumbnail,
-          isNew: movie.isNew,
-          title: movie.title,
-        },
-      ]);
-    }
-  };
-
-  const isInWatchlist = (movieId) => {
-    return watchlist.some((item) => item.id === movieId);
+  const handleToggleWatchlist = (movie) => {
+    if (!isLoggedIn) return;
+    toggleWatchlist(user.userId, movie);
   };
 
   return (
     <div className="bg-page-header-bg">
-      <Navbar isLoggedIn={auth.isLoggedIn} username={auth.user?.username} />
+      <Navbar isLoggedIn={isLoggedIn} />
       <HeroSection />
-      {auth.isLoggedIn && (
+      {isLoggedIn && (
         <MovieSection
           title="Melanjutkan Tonton Film"
           movies={continueWatchingMovies}
@@ -101,26 +116,23 @@ function Home() {
       )}
       <MovieSection
         title="Top Rating Film dan Series Hari Ini"
-        movies={topRatingMovies}
+        movies={topRated}
         CardComponent={MoviesCard}
-        watchlist={watchlist}
-        onToggleWatchlist={toggleWatchlist}
+        onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
       <MovieSection
         title="Film Trending"
-        movies={trendingMovies}
+        movies={trending}
         CardComponent={MoviesCard}
-        watchlist={watchlist}
-        onToggleWatchlist={toggleWatchlist}
+        onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
       <MovieSection
         title="Film Baru"
-        movies={newReleaseMovies}
+        movies={newRelease}
         CardComponent={MoviesCard}
-        watchlist={watchlist}
-        onToggleWatchlist={toggleWatchlist}
+        onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
       <Footer />

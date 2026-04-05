@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { toast } from "react-toastify";
 import { fetchAllUsers, createUser } from "../services/api/user";
+import { useWatchlistStore } from "./watchlistStore";
 
 export const useAuthStore = create(
   persist(
@@ -52,6 +53,7 @@ export const useAuthStore = create(
 
       logout: () => {
         set({ user: null, isLoggedIn: false });
+        useWatchlistStore.getState().clearWatchlist();
         toast.success("Anda telah keluar.");
       },
     }),

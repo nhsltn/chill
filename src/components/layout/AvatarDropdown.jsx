@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiArrowRightOnRectangle } from "react-icons/hi2";
 import { FaUserLarge, FaStar } from "react-icons/fa6";
+import { useAuthStore } from "../../stores/authStore";
 
 import Avatar from "/assets/images/avatar.png";
 
@@ -15,21 +16,21 @@ const LOGGED_IN_MENU = [
 const LOGGED_OUT_MENU = [{ icon: FaUserLarge, label: "Login", path: "/login" }];
 function AvatarDropdown({ isLoggedIn }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuthStore();
   const menuItems = isLoggedIn ? LOGGED_IN_MENU : LOGGED_OUT_MENU;
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
+    logout();
     setIsOpen(false);
-    window.location.reload();
+    navigate("/");
   };
 
   const handleClick = (item) => {
-    setIsOpen(false); // tutup dropdown dulu
-
+    setIsOpen(false);
     if (item.action === "logout") {
       handleLogout();
     } else if (item.path) {
-      navigate(item.path); // ⬅️ pindah halaman
+      navigate(item.path);
     }
   };
 
