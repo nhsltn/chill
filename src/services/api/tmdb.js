@@ -28,7 +28,12 @@ export const getTrendingTV = () => tmdbClient.get("/trending/tv/day");
 export const getNewReleaseMovies = () => tmdbClient.get("/movie/now_playing");
 export const getNewReleaseTV = () => tmdbClient.get("/tv/on_the_air");
 
-export const getTrendingAll = () => tmdbClient.get("/trending/all/day");
+export const getTrendingAll = () =>
+  tmdbClient.get("/trending/all/day", {
+    params: {
+      language: "en-US",
+    },
+  });
 
 export const getDataById = (id, mediatype) =>
   tmdbClient.get(`/${mediatype}/${id}`, {

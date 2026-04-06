@@ -2,14 +2,13 @@
 import React, { useState, useEffect } from "react";
 import ArrowButton from "../ui/ArrowButton";
 
-const ITEMS_PER_PAGE = 5;
-
 function MovieSection({
   title,
   movies,
   CardComponent,
   onToggleWatchlist,
   isInWatchlist,
+  itemsPerPage = 5,
 }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [startIndex, setStartIndex] = useState(0);
@@ -20,12 +19,12 @@ function MovieSection({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const totalPages = Math.ceil(movies.length / ITEMS_PER_PAGE);
-  const visibleMovies = movies.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(movies.length / itemsPerPage);
+  const visibleMovies = movies.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePrev = () => setStartIndex((i) => Math.max(i - 1, 0));
   const handleNext = () =>
-    setStartIndex((i) => Math.min(i + 1, movies.length - ITEMS_PER_PAGE));
+    setStartIndex((i) => Math.min(i + 1, movies.length - itemsPerPage));
 
   return (
     <section className="movie-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
@@ -57,7 +56,7 @@ function MovieSection({
             <ArrowButton
               direction="right"
               onClick={handleNext}
-              disabled={startIndex === movies.length - ITEMS_PER_PAGE}
+              disabled={startIndex === movies.length - itemsPerPage}
             />
 
             {visibleMovies.map((movie) => (
