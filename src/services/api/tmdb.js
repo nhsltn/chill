@@ -29,3 +29,24 @@ export const getNewReleaseMovies = () => tmdbClient.get("/movie/now_playing");
 export const getNewReleaseTV = () => tmdbClient.get("/tv/on_the_air");
 
 export const getTrendingAll = () => tmdbClient.get("/trending/all/day");
+
+export const getDataById = (id, mediatype) =>
+  tmdbClient.get(`/${mediatype}/${id}`, {
+    params: {
+      language: "en-US",
+      include_video_language: "en,id,null",
+    },
+  });
+
+export const getTrailerById = (id, mediatype) =>
+  tmdbClient.get(`/${mediatype}/${id}/videos`, {
+    params: {
+      language: "en-US",
+      include_video_language: "en,id,null",
+    },
+  });
+
+export const getAgeRating = (id, mediaType) =>
+  tmdbClient.get(
+    `/${mediaType}/${id}/${mediaType === "movie" ? "release_dates" : "content_ratings"}`,
+  );

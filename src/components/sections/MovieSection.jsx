@@ -28,7 +28,7 @@ function MovieSection({
     setStartIndex((i) => Math.min(i + 1, movies.length - ITEMS_PER_PAGE));
 
   return (
-    <div className="flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
+    <section className="movie-section flex flex-col w-full items-center text-white lg:px-20 lg:py-10 px-0 py-5">
       <div className="w-full max-w-7xl container flex flex-col gap-5 lg:gap-8 pl-5 lg:pl-0">
         <h3 className="lg:text-[32px] text-[20px] font-bold">{title}</h3>
 
@@ -72,7 +72,7 @@ function MovieSection({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -12,6 +12,10 @@ import {
   getTopRatedTV,
   getTrendingMovies,
   getNewReleaseMovies,
+  getTrendingAll,
+  getDataById,
+  getTrailerById,
+  getAgeRating,
 } from "../services/api/tmdb";
 import { continueWatchingMovies } from "../data/movies";
 
@@ -40,6 +44,7 @@ function Home() {
   const [topRated, setTopRated] = useState([]);
   const [trending, setTrending] = useState([]);
   const [newRelease, setNewRelease] = useState([]);
+  const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,13 +59,19 @@ function Home() {
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        const [topRatedMovieRes, topRatedTVRes, trendingRes, newReleaseRes] =
-          await Promise.all([
-            getTopRatedMovies(),
-            getTopRatedTV(),
-            getTrendingMovies(),
-            getNewReleaseMovies(),
-          ]);
+        const [
+          topRatedMovieRes,
+          topRatedTVRes,
+          trendingRes,
+          newReleaseRes,
+          trendingAllRes,
+        ] = await Promise.all([
+          getTopRatedMovies(),
+          getTopRatedTV(),
+          getTrendingMovies(),
+          getNewReleaseMovies(),
+          getTrendingAll(),
+        ]);
 
         const topRatedCombined = [
           ...topRatedMovieRes.data.results.map((m) => mapMovie(m, "movie")),
@@ -80,6 +91,70 @@ function Home() {
             .map((m) => mapMovie(m, "movie"))
             .slice(0, 10),
         );
+        const randomTrending =
+          trendingAllRes.data.results[
+            Math.floor(Math.random() * trendingAllRes.data.results.length)
+          ];
+
+        const [detailRes, videoRes, ratingRes] = await Promise.all([
+          getDataById(randomTrending.id, randomTrending.media_type),
+          getTrailerById(randomTrending.id, randomTrending.media_type),
+          getAgeRating(randomTrending.id, randomTrending.media_type),
+        ]);
+
+        const videos = videoRes.data.results;
+        const trailer =
+          videos.find(
+            (v) =>
+              v.type === "Trailer" &&
+              v.site === "YouTube" &&
+              v.official === true,
+          ) ||
+          videos.find((v) => v.type === "Trailer" && v.site === "YouTube") ||
+          videos.find(
+            (v) =>
+              v.type === "Teaser" &&
+              v.site === "YouTube" &&
+              v.official === true,
+          ) ||
+          videos.find((v) => v.type === "Teaser" && v.site === "YouTube") ||
+          videos.find((v) => v.site === "YouTube");
+
+        let ageRating = "";
+        const ratingResults = ratingRes.data.results || [];
+
+        if (randomTrending.media_type === "movie") {
+          const releaseData =
+            ratingResults.find((r) => r.iso_3166_1 === "ID") ||
+            ratingResults.find((r) => r.iso_3166_1 === "US") ||
+            ratingResults[0];
+
+          if (releaseData && releaseData.release_dates) {
+            const validCert = releaseData.release_dates.find(
+              (d) => d.certification,
+            );
+            ageRating = validCert ? validCert.certification : "";
+          }
+        } else {
+          const ratingData =
+            ratingResults.find((r) => r.iso_3166_1 === "ID") ||
+            ratingResults.find((r) => r.iso_3166_1 === "US") ||
+            ratingResults[0];
+
+          ageRating = ratingData && ratingData.rating ? ratingData.rating : "";
+        }
+
+        const heroDataFormatted = {
+          title: detailRes.data.title || detailRes.data.name,
+          overview: detailRes.data.overview || "",
+          backdrop: randomTrending.backdrop_path
+            ? `${BACKDROP_BASE_URL}${randomTrending.backdrop_path}`
+            : null,
+          trailerKey: trailer?.key || null,
+          ageRating: ageRating || null,
+        };
+
+        setHeroData(heroDataFormatted);
       } catch (err) {
         console.error("Gagal fetch movies:", err);
       } finally {
@@ -106,7 +181,7 @@ function Home() {
   return (
     <div className="bg-page-header-bg">
       <Navbar isLoggedIn={isLoggedIn} />
-      <HeroSection />
+      <HeroSection movie={heroData} />
       {isLoggedIn && (
         <MovieSection
           title="Melanjutkan Tonton Film"
