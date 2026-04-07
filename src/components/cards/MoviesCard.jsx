@@ -15,6 +15,7 @@ function MoviesCard({
   genreIds = [],
   onToggleWatchlist,
   isInWatchlist,
+  className = "w-28 h-42 lg:w-full lg:h-91.25",
 }) {
   const [hovered, setHovered] = useState(false);
   const inWatchlist = isInWatchlist(id);
@@ -29,6 +30,8 @@ function MoviesCard({
       isNew,
       voteAverage,
       releaseDate,
+      genreIds,
+      mediaType,
     });
   };
 
@@ -42,7 +45,7 @@ function MoviesCard({
 
   return (
     <div
-      className="movie-card relative w-28 h-42 lg:w-full lg:h-91.25 overflow-visible cursor-pointer lg:rounded-lg rounded-md"
+      className={`movie-card relative overflow-visible cursor-pointer lg:rounded-lg rounded-md ${className}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -74,7 +77,7 @@ function MoviesCard({
               className="w-full h-full object-cover mask-[linear-gradient(to_top,transparent_0%,black_15%)]"
             />
           </div>
-          <div className="content-header px-[29.14px] pt-4 text-lg font-bold flex flex-col gap-4">
+          <div className="content-header px-[29.14px] pt-4 text-lg font-bold flex flex-col gap-4 text-white">
             <p>{title}</p>
             <p>{mediaType === "tv" ? "TV Series" : "Movie"}</p>
           </div>
@@ -95,7 +98,7 @@ function MoviesCard({
                   <FaCheck className="size-6" />
                 </button>
               </div>
-              <button className="flex items-center justify-center border border-white/60 rounded-full size-13.75 ml-auto flex-shrink-0">
+              <button className="flex items-center justify-center border border-white/60 rounded-full size-13.75 ml-auto shrink-0">
                 <FaChevronDown className="text-white size-6 mt-0.5" />
               </button>
             </div>
@@ -105,7 +108,9 @@ function MoviesCard({
                 <FaStar />
                 <p>{rating}</p>
               </div>
-              <p className="release-date text-[20px] font-bold">{year}</p>
+              <p className="release-date text-[20px] font-bold text-white">
+                {year}
+              </p>
             </div>
             {genreNames.length > 0 && (
               <div className="flex items-center justify-between text-lg font-bold text-text-light-secondary">

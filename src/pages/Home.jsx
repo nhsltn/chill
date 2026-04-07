@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
@@ -37,9 +35,15 @@ const mapMovie = (movie, type) => ({
 
 function Home() {
   const { isLoggedIn, user } = useAuthStore();
-  const { fetchWatchlist, toggleWatchlist, isInWatchlist } =
-    useWatchlistStore();
+  const {
+    fetchWatchlist,
+    toggleWatchlist,
+    isInWatchlist,
+    watchlist,
+    clearWatchlist,
+  } = useWatchlistStore();
 
+  const [allTrending, setAllTrending] = useState([]);
   const [continueMovies, setContinueMovies] = useState([]);
   const [topRated, setTopRated] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -51,9 +55,9 @@ function Home() {
     if (isLoggedIn && user?.userId) {
       fetchWatchlist(user.userId);
     } else {
-      useWatchlistStore.getState().clearWatchlist();
+      clearWatchlist();
     }
-  }, [isLoggedIn, user?.userId]);
+  }, [isLoggedIn, user?.userId, fetchWatchlist, clearWatchlist]);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,39 +100,11 @@ function Home() {
             .slice(0, 10),
         );
 
-        const currentWatchlist = useWatchlistStore.getState().watchlist;
-        console.log("Watchlist item:", currentWatchlist[0]);
-        const watchlistMovies = currentWatchlist.slice(0, 8).map((m) => ({
-          id: m.movieId,
-          title: m.title,
-          thumbnail: m.backdropPath || m.posterPath,
-          isNew: m.isNew || false,
-        }));
-
-        const allTrending = trendingAllRes.data.results;
-
-        if (watchlistMovies.length < 8) {
-          const needed = 8 - watchlistMovies.length;
-          const watchlistIds = new Set(watchlistMovies.map((m) => m.id));
-
-          const randomFill = allTrending
-            .filter((m) => !watchlistIds.has(m.id) && m.backdrop_path)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, needed)
-            .map((m) => ({
-              id: m.id,
-              title: m.title || m.name,
-              thumbnail: `${BACKDROP_BASE_URL}${m.backdrop_path}`, // pakai backdrop
-              isNew: false,
-            }));
-
-          setContinueMovies([...watchlistMovies, ...randomFill]);
-        } else {
-          setContinueMovies(watchlistMovies);
-        }
+        const trendingAll = trendingAllRes.data.results;
+        setAllTrending(trendingAll);
 
         const randomTrending =
-          allTrending[Math.floor(Math.random() * allTrending.length)];
+          trendingAll[Math.floor(Math.random() * trendingAll.length)];
 
         const [detailRes, videoRes, ratingRes] = await Promise.all([
           getDataById(randomTrending.id, randomTrending.media_type),
@@ -200,9 +176,42 @@ function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (allTrending.length === 0) return;
+
+    const watchlistMovies = watchlist.slice(0, 8).map((m) => ({
+      id: m.movieId,
+      title: m.title,
+      thumbnail: m.backdropPath || m.posterPath,
+      isNew: m.isNew || false,
+      progress: Math.floor(Math.random() * 80) + 10,
+    }));
+
+    if (watchlistMovies.length < 8) {
+      const needed = 8 - watchlistMovies.length;
+      const watchlistIds = new Set(watchlistMovies.map((m) => m.id));
+
+      const randomFill = allTrending
+        .filter((m) => !watchlistIds.has(m.id) && m.backdrop_path)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, needed)
+        .map((m) => ({
+          id: m.id,
+          title: m.title || m.name,
+          thumbnail: `${BACKDROP_BASE_URL}${m.backdrop_path}`,
+          isNew: false,
+          progress: Math.floor(Math.random() * 80) + 10,
+        }));
+
+      setContinueMovies([...watchlistMovies, ...randomFill]);
+    } else {
+      setContinueMovies(watchlistMovies);
+    }
+  }, [watchlist, allTrending]);
+
   if (loading) {
     return (
-      <div className="bg-page-header-bg min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen flex items-center justify-center text-white">
         Loading...
       </div>
     );
@@ -214,8 +223,7 @@ function Home() {
   };
 
   return (
-    <div className="bg-page-header-bg">
-      <Navbar isLoggedIn={isLoggedIn} />
+    <>
       <HeroSection movie={heroData} />
       {isLoggedIn && (
         <MovieSection
@@ -246,8 +254,7 @@ function Home() {
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
-      <Footer />
-    </div>
+    </>
   );
 }
 

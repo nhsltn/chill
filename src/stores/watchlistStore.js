@@ -33,17 +33,20 @@ export const useWatchlistStore = create(
         const existing = watchlist.find((w) => w.movieId === String(movie.id));
 
         if (existing) {
+          console.log("existing:", existing);
+
           set({
             watchlist: watchlist.filter((w) => w.movieId !== String(movie.id)),
           });
           try {
-            await removeFromWatchlist(existing.wathclistId || existing.id);
+            await removeFromWatchlist(existing.watchlistId);
             toast.success("Dihapus dari watchlist!");
           } catch {
             set({ watchlist });
             toast.error("Gagal menghapus dari watchlist!");
           }
         } else {
+          const tempId = `temp-${Date.now()}`;
           const newItem = {
             userId: String(userId),
             movieId: String(movie.id),
@@ -52,22 +55,30 @@ export const useWatchlistStore = create(
             backdropPath: movie.backdrop || null,
             voteAverage: String(movie.voteAverage ?? ""),
             releaseDate: String(movie.releaseDate ?? ""),
+            genreIds: movie.genreIds || [],
+            mediaType: movie.mediaType || "movie",
             isNew: movie.isNew ?? false,
             addedAt: new Date().toISOString(),
           };
 
-          set({ watchlist: [...watchlist, { ...newItem, id: "temp" }] });
+          set({
+            watchlist: [...watchlist, { ...newItem, watchlistId: tempId }],
+          });
           try {
             const res = await addToWatchlist(newItem);
             set({
               watchlist: [
-                ...get().watchlist.filter((w) => w.id !== "temp"),
+                ...get().watchlist.filter((w) => w.watchlistId !== tempId),
                 res.data,
               ],
             });
             toast.success("Ditambahkan ke watchlist!");
           } catch {
-            set({ watchlist });
+            set({
+              watchlist: get().watchlist.filter(
+                (w) => w.watchlistId !== tempId,
+              ),
+            });
             toast.error("Gagal menambahkan ke watchlist!");
           }
         }
