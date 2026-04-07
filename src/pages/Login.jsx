@@ -3,39 +3,22 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import AuthCard from "../components/cards/AuthCard";
 import InputField from "../components/ui/InputField";
+import { useAuthStore } from "../stores/authStore";
 
 function Login() {
   const navigate = useNavigate();
+  const { login, loading } = useAuthStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!username || !password) {
       toast.error("Semua field harus diisi!");
       return;
     }
 
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const foundUser = existingUsers.find(
-      (user) => user.username === username && user.password === password,
-    );
-    if (!foundUser) {
-      toast.error("Username atau password salah!");
-      return;
-    }
-
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify({
-        id: foundUser.id,
-        username: foundUser.username,
-      }),
-    );
-    setUsername("");
-    setPassword("");
-    navigate("/");
-    toast.success(`Selamat datang, ${foundUser.username}!`);
+    await login(username, password, navigate);
   };
 
   return (

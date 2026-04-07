@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AvatarDropdown from "./AvatarDropdown";
 import { navLinks } from "../../data/links";
 import { Link } from "react-router-dom";
+
 function Navbar({ isLoggedIn, username }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
-    <nav className="navbar w-full flex justify-between py-1.5 lg:py-6.25 px-5 lg:px-20 bg-page-header-bg">
+    <nav
+      className={`navbar fixed top-0 left-0 w-full z-50 flex justify-between py-1.5 lg:py-6.25 px-5 lg:px-20 transition-colors duration-300 ${isScrolled ? "bg-page-header-bg" : "bg-transparent"}`}
+    >
       <ul className="flex gap-3 lg:gap-20 items-center text-white font-medium text-[10px] lg:text-lg">
         <li>
           <Link to="/" className="flex h-11 gap-1 items-center">
