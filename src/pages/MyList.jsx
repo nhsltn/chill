@@ -27,7 +27,7 @@ function MyList() {
   };
 
   return (
-    <section className="my-list-section px-5 lg:px-20 pt-20 lg:pt-40  pb-20 flex flex-col gap-8">
+    <section className="my-list-section px-5 lg:px-20 pt-20 lg:pt-40 pb-20 flex flex-col gap-8">
       <h1 className="font-bold text-[32px] text-white">Daftar Saya</h1>
       {watchlist.length === 0 ? (
         <p className="text-white/50">Belum ada film di Watch list Kamu.</p>
