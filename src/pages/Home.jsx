@@ -3,8 +3,12 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
-import { useAuthStore } from "../stores/authStore";
-import { useWatchlistStore } from "../stores/watchlistStore";
+import {
+  fetchWatchlist,
+  toggleWatchlist,
+  clearWatchlist,
+} from "../store/redux/watchlistSlice";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getTopRatedMovies,
   getTopRatedTV,
@@ -34,14 +38,12 @@ const mapMovie = (movie, type) => ({
 });
 
 function Home() {
-  const { isLoggedIn, user } = useAuthStore();
-  const {
-    fetchWatchlist,
-    toggleWatchlist,
-    isInWatchlist,
-    watchlist,
-    clearWatchlist,
-  } = useWatchlistStore();
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const { watchlist } = useSelector((state) => state.watchlist);
+
+  const isInWatchlist = (movieId) =>
+    watchlist.some((w) => w.movieId === String(movieId));
 
   const [allTrending, setAllTrending] = useState([]);
   const [continueMovies, setContinueMovies] = useState([]);
@@ -53,11 +55,11 @@ function Home() {
 
   useEffect(() => {
     if (isLoggedIn && user?.userId) {
-      fetchWatchlist(user.userId);
+      dispatch(fetchWatchlist(user.userId));
     } else {
-      clearWatchlist();
+      dispatch(clearWatchlist());
     }
-  }, [isLoggedIn, user?.userId, fetchWatchlist, clearWatchlist]);
+  }, [isLoggedIn, user?.userId, dispatch]);
 
   useEffect(() => {
     let cancelled = false;
@@ -219,7 +221,7 @@ function Home() {
 
   const handleToggleWatchlist = (movie) => {
     if (!isLoggedIn) return;
-    toggleWatchlist(user.userId, movie);
+    dispatch(toggleWatchlist({ userId: user.userId, movie }));
   };
 
   return (

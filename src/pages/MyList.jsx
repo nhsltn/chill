@@ -1,29 +1,31 @@
 import React, { useEffect } from "react";
-import { useAuthStore } from "../stores/authStore";
-import { useWatchlistStore } from "../stores/watchlistStore";
+import {
+  fetchWatchlist,
+  toggleWatchlist,
+  clearWatchlist,
+} from "../store/redux/watchlistSlice";
+import { useSelector, useDispatch } from "react-redux";
 import MoviesCard from "../components/cards/MoviesCard";
 
 function MyList() {
-  const { isLoggedIn, user } = useAuthStore();
-  const {
-    fetchWatchlist,
-    toggleWatchlist,
-    isInWatchlist,
-    watchlist,
-    clearWatchlist,
-  } = useWatchlistStore();
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const { watchlist } = useSelector((state) => state.watchlist);
+
+  const isInWatchlist = (movieId) =>
+    watchlist.some((w) => w.movieId === String(movieId));
 
   useEffect(() => {
     if (isLoggedIn && user?.userId) {
-      fetchWatchlist(user.userId);
+      dispatch(fetchWatchlist(user.userId));
     } else {
-      clearWatchlist();
+      dispatch(clearWatchlist());
     }
-  }, [isLoggedIn, user?.userId, fetchWatchlist, clearWatchlist]);
+  }, [isLoggedIn, user?.userId, dispatch]);
 
   const handleToggleWatchlist = (movie) => {
     if (!isLoggedIn) return;
-    toggleWatchlist(user.userId, movie);
+    dispatch(toggleWatchlist({ userId: user.userId, movie }));
   };
 
   return (

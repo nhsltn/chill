@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../components/cards/AuthCard";
 import InputField from "../components/ui/InputField";
-import { useAuthStore } from "../stores/authStore";
-
+import { useDispatch } from "react-redux";
+import { registerUser } from "../store/redux/authSlice";
 function Register() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { register, loading } = useAuthStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,7 +24,7 @@ function Register() {
       toast.error("Kata sandi tidak cocok!");
       return;
     }
-    register(username, password, navigate);
+    dispatch(registerUser({ username, password, navigate }));
   };
 
   return (
