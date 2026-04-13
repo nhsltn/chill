@@ -28,6 +28,9 @@ export const getTrendingTV = () => tmdbClient.get("/trending/tv/day");
 export const getNewReleaseMovies = () => tmdbClient.get("/movie/now_playing");
 export const getNewReleaseTV = () => tmdbClient.get("/tv/on_the_air");
 
+export const getPopularMovies = () => tmdbClient.get("/movie/popular");
+export const getPopularTV = () => tmdbClient.get("/tv/popular");
+
 export const getTrendingAll = () =>
   tmdbClient.get("/trending/all/day", {
     params: {

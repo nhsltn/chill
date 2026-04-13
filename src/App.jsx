@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import MyList from "./pages/MyList";
 import NotFound from "./pages/NotFound";
+import Series from "./pages/Series";
+import Movies from "./pages/Movies";
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +17,8 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/my-list" element={<MyList />} />
+          <Route path="/series" element={<Series />} />
+          <Route path="/movies" element={<Movies />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
