@@ -19,6 +19,7 @@ import {
   getTrailerById,
   getAgeRating,
 } from "../services/api/tmdb";
+import { pickTrailerKey, parseAgeRating } from "../utils/heroHelpers";
 
 const POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w780";
@@ -105,44 +106,19 @@ function Movies() {
 
         if (cancelled) return;
 
-        const videos = videoRes.data.results;
-        const trailer =
-          videos.find(
-            (v) =>
-              v.type === "Trailer" &&
-              v.site === "YouTube" &&
-              v.official === true,
-          ) ||
-          videos.find((v) => v.type === "Trailer" && v.site === "YouTube") ||
-          videos.find(
-            (v) =>
-              v.type === "Teaser" &&
-              v.site === "YouTube" &&
-              v.official === true,
-          ) ||
-          videos.find((v) => v.type === "Teaser" && v.site === "YouTube") ||
-          videos.find((v) => v.site === "YouTube");
-
-        let ageRating = "";
-        const ratingResults = ratingRes.data.results || [];
-        const releaseData =
-          ratingResults.find((r) => r.iso_3166_1 === "ID") ||
-          ratingResults.find((r) => r.iso_3166_1 === "US") ||
-          ratingResults[0];
-        if (releaseData?.release_dates) {
-          const validCert = releaseData.release_dates.find(
-            (d) => d.certification,
-          );
-          ageRating = validCert?.certification || "";
-        }
+        const trailerKey = pickTrailerKey(videoRes.data.results);
+        const ageRating = parseAgeRating(
+          ratingRes.data.results || [],
+          randomMovie.media_type,
+        );
 
         setHeroData({
-          title: detailRes.data.title,
+          title: detailRes.data.title || detailRes.data.name,
           overview: detailRes.data.overview || "",
           backdrop: randomMovie.backdrop_path
             ? `${BACKDROP_BASE_URL}${randomMovie.backdrop_path}`
             : null,
-          trailerKey: trailer?.key || null,
+          trailerKey: trailerKey,
           ageRating: ageRating || null,
         });
       } catch (err) {
