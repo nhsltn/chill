@@ -3,6 +3,7 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
+import DetailCard from "../components/cards/DetailCard";
 import {
   fetchWatchlist,
   toggleWatchlist,
@@ -52,6 +53,13 @@ function Home() {
   const [newRelease, setNewRelease] = useState([]);
   const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modalData, setModalData] = useState(null);
+
+  const handleOpenDetail = ({ id, mediaType }) => {
+    setModalData({ id, mediaType });
+  };
+
+  const handleCloseDetail = () => setModalData(null);
 
   useEffect(() => {
     if (isLoggedIn && user?.userId) {
@@ -241,6 +249,7 @@ function Home() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Film Trending"
@@ -248,6 +257,7 @@ function Home() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Film Baru"
@@ -255,7 +265,18 @@ function Home() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
+
+      {modalData && (
+        <DetailCard
+          id={modalData.id}
+          mediaType={modalData.mediaType}
+          onClose={handleCloseDetail}
+          onToggleWatchlist={handleToggleWatchlist}
+          isInWatchlist={isInWatchlist}
+        />
+      )}
     </>
   );
 }

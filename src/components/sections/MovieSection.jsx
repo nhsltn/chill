@@ -8,7 +8,9 @@ function MovieSection({
   CardComponent,
   onToggleWatchlist,
   isInWatchlist,
+  onOpenDetail,
   itemsPerPage = 5,
+  simple = false,
 }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [startIndex, setStartIndex] = useState(0);
@@ -40,6 +42,8 @@ function MovieSection({
                     {...movie}
                     onToggleWatchlist={onToggleWatchlist}
                     isInWatchlist={isInWatchlist}
+                    onOpenDetail={onOpenDetail}
+                    simple={simple}
                   />
                 </div>
               ))}
@@ -47,17 +51,20 @@ function MovieSection({
           </div>
         ) : (
           <div className="relative flex gap-7">
-            <ArrowButton
-              direction="left"
-              onClick={handlePrev}
-              disabled={startIndex === 0}
-            />
-
-            <ArrowButton
-              direction="right"
-              onClick={handleNext}
-              disabled={startIndex === movies.length - itemsPerPage}
-            />
+            {!simple && (
+              <ArrowButton
+                direction="left"
+                onClick={handlePrev}
+                disabled={startIndex === 0}
+              />
+            )}
+            {!simple && (
+              <ArrowButton
+                direction="right"
+                onClick={handleNext}
+                disabled={startIndex === movies.length - itemsPerPage}
+              />
+            )}
 
             {visibleMovies.map((movie) => (
               <div key={movie.id} className="flex-1">
@@ -65,6 +72,8 @@ function MovieSection({
                   {...movie}
                   onToggleWatchlist={onToggleWatchlist}
                   isInWatchlist={isInWatchlist}
+                  onOpenDetail={onOpenDetail}
+                  simple={simple}
                 />
               </div>
             ))}
