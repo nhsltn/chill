@@ -5,6 +5,7 @@ import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
 import DetailCard from "../components/cards/DetailCard";
 import { useWatchlist } from "../hooks/useWatchlist";
+import { useMediaModal } from "../hooks/useMediaModal";
 import { useContinueWatching } from "../hooks/useContinueWatching";
 import {
   getTopRatedMovies,
@@ -33,13 +34,7 @@ function Home() {
   const [newRelease, setNewRelease] = useState([]);
   const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [modalData, setModalData] = useState(null);
-
-  const handleOpenDetail = ({ id, mediaType }) => {
-    setModalData({ id, mediaType });
-  };
-
-  const handleCloseDetail = () => setModalData(null);
+  const { modalData, handleOpenDetail, handleCloseDetail } = useMediaModal();
 
   useEffect(() => {
     let cancelled = false;

@@ -3,7 +3,9 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
+import DetailCard from "../components/cards/DetailCard";
 import { useWatchlist } from "../hooks/useWatchlist";
+import { useMediaModal } from "../hooks/useMediaModal";
 import { useContinueWatching } from "../hooks/useContinueWatching";
 import {
   getTopRatedTV,
@@ -26,13 +28,16 @@ function Series() {
     useWatchlist();
 
   const [allTrending, setAllTrending] = useState([]);
-  const continueMovies = useContinueWatching(watchlist, allTrending);
+  const continueMovies = useContinueWatching(watchlist, allTrending, "tv");
   const [topRated, setTopRated] = useState([]);
   const [trending, setTrending] = useState([]);
   const [popular, setPopular] = useState([]);
   const [newRelease, setNewRelease] = useState([]);
   const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { modalData, handleOpenDetail, handleCloseDetail } = useMediaModal();
+
+  const toSeries = (m) => mapMovie(m, "tv");
 
   useEffect(() => {
     let cancelled = false;
@@ -50,13 +55,13 @@ function Series() {
 
         if (cancelled) return;
 
-        setTopRated(topRatedRes.data.results.map(mapMovie).slice(0, 10));
+        setTopRated(topRatedRes.data.results.map(toSeries).slice(0, 10));
 
         const trendingList = trendingRes.data.results;
-        setTrending(trendingList.map(mapMovie).slice(0, 10));
+        setTrending(trendingList.map(toSeries).slice(0, 10));
         setAllTrending(trendingList);
-        setNewRelease(newReleaseRes.data.results.map(mapMovie).slice(0, 10));
-        setPopular(popularRes.data.results.map(mapMovie).slice(0, 10));
+        setNewRelease(newReleaseRes.data.results.map(toSeries).slice(0, 10));
+        setPopular(popularRes.data.results.map(toSeries).slice(0, 10));
 
         const randomSeries =
           trendingList[Math.floor(Math.random() * trendingList.length)];
@@ -129,6 +134,7 @@ function Series() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Series Trending"
@@ -136,6 +142,7 @@ function Series() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Series Terbaru"
@@ -143,7 +150,18 @@ function Series() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
+
+      {modalData && (
+        <DetailCard
+          id={modalData.id}
+          mediaType={modalData.mediaType}
+          onClose={handleCloseDetail}
+          onToggleWatchlist={handleToggleWatchlist}
+          isInWatchlist={isInWatchlist}
+        />
+      )}
     </>
   );
 }

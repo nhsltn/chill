@@ -3,13 +3,14 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
+import DetailCard from "../components/cards/DetailCard";
+import { useMediaModal } from "../hooks/useMediaModal";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { useContinueWatching } from "../hooks/useContinueWatching";
 import {
   getTopRatedMovies,
   getTrendingMovies,
   getNewReleaseMovies,
-  getTrendingAll,
   getPopularMovies,
   getDataById,
   getTrailerById,
@@ -26,42 +27,37 @@ function Movies() {
   const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
     useWatchlist();
   const [allTrending, setAllTrending] = useState([]);
-  const continueMovies = useContinueWatching(watchlist, allTrending);
+  const continueMovies = useContinueWatching(watchlist, allTrending, "movie");
   const [topRated, setTopRated] = useState([]);
   const [trending, setTrending] = useState([]);
   const [newRelease, setNewRelease] = useState([]);
   const [popular, setPopular] = useState([]);
   const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { modalData, handleOpenDetail, handleCloseDetail } = useMediaModal();
+  const toMovie = (m) => mapMovie(m, "movie");
   useEffect(() => {
     let cancelled = false;
 
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        const [
-          topRatedRes,
-          trendingRes,
-          newReleaseRes,
-          trendingAllRes,
-          popularRes,
-        ] = await Promise.all([
-          getTopRatedMovies(),
-          getTrendingMovies(),
-          getNewReleaseMovies(),
-          getTrendingAll(),
-          getPopularMovies(),
-        ]);
+        const [topRatedRes, trendingRes, newReleaseRes, popularRes] =
+          await Promise.all([
+            getTopRatedMovies(),
+            getTrendingMovies(),
+            getNewReleaseMovies(),
+            getPopularMovies(),
+          ]);
 
         if (cancelled) return;
 
-        setTopRated(topRatedRes.data.results.map(mapMovie).slice(0, 10));
-        setTrending(trendingRes.data.results.map(mapMovie).slice(0, 10));
-        setNewRelease(newReleaseRes.data.results.map(mapMovie).slice(0, 10));
-        setPopular(popularRes.data.results.map(mapMovie).slice(0, 10));
+        setTopRated(topRatedRes.data.results.map(toMovie).slice(0, 10));
+        setTrending(trendingRes.data.results.map(toMovie).slice(0, 10));
+        setNewRelease(newReleaseRes.data.results.map(toMovie).slice(0, 10));
+        setPopular(popularRes.data.results.map(toMovie).slice(0, 10));
 
-        const trendingMovies = trendingAllRes.data.results.filter(
+        const trendingMovies = trendingRes.data.results.filter(
           (m) => m.media_type === "movie",
         );
         setAllTrending(trendingMovies);
@@ -130,6 +126,7 @@ function Movies() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Top Rating Film"
@@ -137,6 +134,7 @@ function Movies() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Film Trending"
@@ -144,6 +142,7 @@ function Movies() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Film Baru"
@@ -152,6 +151,15 @@ function Movies() {
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
+      {modalData && (
+        <DetailCard
+          id={modalData.id}
+          mediaType={modalData.mediaType}
+          onClose={handleCloseDetail}
+          onToggleWatchlist={handleToggleWatchlist}
+          isInWatchlist={isInWatchlist}
+        />
+      )}
     </>
   );
 }
