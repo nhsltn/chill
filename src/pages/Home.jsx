@@ -4,12 +4,8 @@ import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
 import DetailCard from "../components/cards/DetailCard";
-import {
-  fetchWatchlist,
-  toggleWatchlist,
-  clearWatchlist,
-} from "../store/redux/watchlistSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useWatchlist } from "../hooks/useWatchlist";
+import { useContinueWatching } from "../hooks/useContinueWatching";
 import {
   getTopRatedMovies,
   getTopRatedTV,
@@ -21,34 +17,17 @@ import {
   getAgeRating,
 } from "../services/api/tmdb";
 import { pickTrailerKey, parseAgeRating } from "../utils/heroHelpers";
-
-const POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w780";
-
-const mapMovie = (movie, type) => ({
-  id: movie.id,
-  title: movie.title || movie.name,
-  thumbnail: `${POSTER_BASE_URL}${movie.poster_path}`,
-  backdrop: movie.backdrop_path
-    ? `${BACKDROP_BASE_URL}${movie.backdrop_path}`
-    : null,
-  isNew: false,
-  mediaType: type,
-  voteAverage: movie.vote_average,
-  releaseDate: movie.release_date || movie.first_air_date,
-  genreIds: movie.genre_ids,
-});
+import {
+  mapMovie,
+  POSTER_BASE_URL,
+  BACKDROP_BASE_URL,
+} from "../utils/mediaMapper";
 
 function Home() {
-  const dispatch = useDispatch();
-  const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const { watchlist } = useSelector((state) => state.watchlist);
-
-  const isInWatchlist = (movieId) =>
-    watchlist.some((w) => w.movieId === String(movieId));
-
+  const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
+    useWatchlist();
   const [allTrending, setAllTrending] = useState([]);
-  const [continueMovies, setContinueMovies] = useState([]);
+  const continueMovies = useContinueWatching(watchlist, allTrending);
   const [topRated, setTopRated] = useState([]);
   const [trending, setTrending] = useState([]);
   const [newRelease, setNewRelease] = useState([]);
@@ -61,14 +40,6 @@ function Home() {
   };
 
   const handleCloseDetail = () => setModalData(null);
-
-  useEffect(() => {
-    if (isLoggedIn && user?.userId) {
-      dispatch(fetchWatchlist(user.userId));
-    } else {
-      dispatch(clearWatchlist());
-    }
-  }, [isLoggedIn, user?.userId, dispatch]);
 
   useEffect(() => {
     let cancelled = false;
@@ -153,39 +124,6 @@ function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (allTrending.length === 0) return;
-
-    const watchlistMovies = watchlist.slice(0, 8).map((m) => ({
-      id: m.movieId,
-      title: m.title,
-      thumbnail: m.backdropPath || m.posterPath,
-      isNew: m.isNew || false,
-      progress: Math.floor(Math.random() * 80) + 10,
-    }));
-
-    if (watchlistMovies.length < 8) {
-      const needed = 8 - watchlistMovies.length;
-      const watchlistIds = new Set(watchlistMovies.map((m) => m.id));
-
-      const randomFill = allTrending
-        .filter((m) => !watchlistIds.has(m.id) && m.backdrop_path)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, needed)
-        .map((m) => ({
-          id: m.id,
-          title: m.title || m.name,
-          thumbnail: `${BACKDROP_BASE_URL}${m.backdrop_path}`,
-          isNew: false,
-          progress: Math.floor(Math.random() * 80) + 10,
-        }));
-
-      setContinueMovies([...watchlistMovies, ...randomFill]);
-    } else {
-      setContinueMovies(watchlistMovies);
-    }
-  }, [watchlist, allTrending]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
@@ -193,11 +131,6 @@ function Home() {
       </div>
     );
   }
-
-  const handleToggleWatchlist = (movie) => {
-    if (!isLoggedIn) return;
-    dispatch(toggleWatchlist({ userId: user.userId, movie }));
-  };
 
   return (
     <>
