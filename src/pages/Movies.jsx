@@ -3,8 +3,7 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
-import DetailCard from "../components/cards/DetailCard";
-import { useMediaModal } from "../hooks/useMediaModal";
+import { useModal } from "../hooks/useModal";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { useContinueWatching } from "../hooks/useContinueWatching";
 import {
@@ -34,7 +33,8 @@ function Movies() {
   const [popular, setPopular] = useState([]);
   const [heroData, setHeroData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { modalData, handleOpenDetail, handleCloseDetail } = useMediaModal();
+  const { handleOpenDetail } = useModal();
+
   const toMovie = (m) => mapMovie(m, "movie");
   useEffect(() => {
     let cancelled = false;
@@ -151,15 +151,6 @@ function Movies() {
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
       />
-      {modalData && (
-        <DetailCard
-          id={modalData.id}
-          mediaType={modalData.mediaType}
-          onClose={handleCloseDetail}
-          onToggleWatchlist={handleToggleWatchlist}
-          isInWatchlist={isInWatchlist}
-        />
-      )}
     </>
   );
 }
