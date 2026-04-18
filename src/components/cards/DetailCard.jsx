@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCheck, FaTimes, FaPlus } from "react-icons/fa";
 import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import {
@@ -11,9 +11,14 @@ import {
 } from "../../services/api/tmdb";
 import MovieSection from "../sections/MovieSection";
 import MoviesCard from "./MoviesCard";
+import { useTrailerVideo } from "../../hooks/useTrailerVideo";
+import { pickTrailerKey, parseAgeRating } from "../../utils/heroHelpers";
+import {
+  mapMovie,
+  BACKDROP_BASE_URL,
+  POSTER_BASE_URL,
+} from "../../utils/mediaMapper";
 
-const BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w780";
-const POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const STILL_BASE_URL = "https://image.tmdb.org/t/p/w300";
 
 function DetailCard({
@@ -32,11 +37,9 @@ function DetailCard({
   const [trailerKey, setTrailerKey] = useState(null);
   const [loading, setLoading] = useState(true);
   const [episodeLoading, setEpisodeLoading] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const [similarMovies, setSimilarMovies] = useState([]);
-  const [showTrailer, setShowTrailer] = useState(false);
-  const timerRef = useRef(null);
 
+  const { isMuted, showTrailer, toggleMute } = useTrailerVideo(trailerKey);
   const inWatchlist = isInWatchlist(id);
 
   useEffect(() => {
@@ -66,60 +69,15 @@ function DetailCard({
 
         setDetail(detailRes.data);
         setCredits(creditsRes.data);
+        setSimilarMovies(
+          similarRes.data.results
+            ?.slice(0, 3)
+            .map((m) => mapMovie(m, mediaType)) || [],
+        );
+        setTrailerKey(pickTrailerKey(videoRes.data.results));
+        setAgeRating(parseAgeRating(ratingRes.data.results || [], mediaType));
 
-        const similars =
-          similarRes.data.results?.slice(0, 3).map((m) => ({
-            id: m.id,
-            title: m.title || m.name,
-            thumbnail: m.poster_path
-              ? `${POSTER_BASE_URL}${m.poster_path}`
-              : null,
-            backdrop: m.backdrop_path
-              ? `${BACKDROP_BASE_URL}${m.backdrop_path}`
-              : null,
-            voteAverage: m.vote_average,
-            releaseDate: m.release_date || m.first_air_date,
-            genreIds: m.genre_ids || [],
-            mediaType,
-            isNew: false,
-          })) || [];
-        setSimilarMovies(similars);
-
-        const videos = videoRes.data.results;
-        const trailer =
-          videos.find(
-            (v) =>
-              v.type === "Trailer" &&
-              v.site === "YouTube" &&
-              v.official === true,
-          ) ||
-          videos.find((v) => v.type === "Trailer" && v.site === "YouTube") ||
-          videos.find(
-            (v) =>
-              v.type === "Teaser" &&
-              v.site === "YouTube" &&
-              v.official === true,
-          ) ||
-          videos.find((v) => v.type === "Teaser" && v.site === "YouTube") ||
-          videos.find((v) => v.site === "YouTube");
-        setTrailerKey(trailer?.key || null);
-
-        const ratingResults = ratingRes.data.results || [];
-        if (mediaType === "movie") {
-          const releaseData =
-            ratingResults.find((r) => r.iso_3166_1 === "ID") ||
-            ratingResults.find((r) => r.iso_3166_1 === "US") ||
-            ratingResults[0];
-          const validCert = releaseData?.release_dates?.find(
-            (d) => d.certification,
-          );
-          setAgeRating(validCert?.certification || "");
-        } else {
-          const ratingData =
-            ratingResults.find((r) => r.iso_3166_1 === "ID") ||
-            ratingResults.find((r) => r.iso_3166_1 === "US") ||
-            ratingResults[0];
-          setAgeRating(ratingData?.rating || "");
+        if (mediaType === "tv") {
           setSeasons(
             detailRes.data.seasons?.filter((s) => s.season_number > 0) || [],
           );
@@ -136,20 +94,6 @@ function DetailCard({
       cancelled = true;
     };
   }, [id, mediaType]);
-
-  useEffect(() => {
-    setShowTrailer(false);
-    setIsMuted(true);
-    clearTimeout(timerRef.current);
-
-    if (trailerKey) {
-      timerRef.current = setTimeout(() => {
-        setShowTrailer(true);
-      }, 3000);
-    }
-
-    return () => clearTimeout(timerRef.current);
-  }, [trailerKey]);
 
   useEffect(() => {
     if (mediaType !== "tv" || !id) return;
@@ -238,7 +182,6 @@ function DetailCard({
               <div className="absolute inset-0 bg-linear-to-t from-[#181818] via-transparent to-transparent" />
               <div className="absolute flex flex-col gap-6 w-193.25 bottom-30 left-1/2 -translate-x-1/2">
                 <h2 className="text-white text-[32px] font-bold">{title}</h2>
-
                 <div className="flex items-center justify-between">
                   <div className="movie-buttons flex gap-2.5">
                     <button className="start-button rounded-[48px] bg-primary-3 text-xs lg:text-base font-bold text-white py-1 lg:py-2.5 px-3 lg:px-7 gap-2 flex items-center">
@@ -274,10 +217,9 @@ function DetailCard({
                       )}
                     </button>
                   </div>
-
                   {showTrailer && (
                     <button
-                      onClick={() => setIsMuted((prev) => !prev)}
+                      onClick={toggleMute}
                       className="flex items-center justify-center border rounded-full border-white/60 text-white size-12 hover:border-white transition shrink-0"
                     >
                       {isMuted ? (
