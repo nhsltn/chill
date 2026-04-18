@@ -14,6 +14,7 @@ import {
   getPopularTV,
 } from "../services/api/tmdb";
 import { mapMovie } from "../utils/mediaMapper";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 function Series() {
   const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
@@ -46,11 +47,7 @@ function Series() {
   const continueMovies = useContinueWatching(watchlist, trending, "tv");
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Loading...
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

@@ -15,6 +15,7 @@ import {
   getTrendingAll,
 } from "../services/api/tmdb";
 import { mapMovie } from "../utils/mediaMapper";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 function Home() {
   const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
@@ -66,11 +67,7 @@ function Home() {
   const continueMovies = useContinueWatching(watchlist, mappedTrending);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Loading...
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

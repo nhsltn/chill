@@ -18,6 +18,7 @@ import {
   BACKDROP_BASE_URL,
   POSTER_BASE_URL,
 } from "../../utils/mediaMapper";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 const STILL_BASE_URL = "https://image.tmdb.org/t/p/w300";
 
@@ -158,9 +159,7 @@ function DetailCard({
         </button>
 
         {loading ? (
-          <div className="flex items-center justify-center h-60 text-white">
-            Loading...
-          </div>
+          <LoadingSpinner wrapperClass="h-60" />
         ) : (
           <>
             <div className="relative w-full h-138.5 overflow-hidden rounded-t-2xl shrink-0">
@@ -302,9 +301,7 @@ function DetailCard({
                 </div>
                 <div className="episode-list flex flex-col gap-4 px-6">
                   {episodeLoading ? (
-                    <div className="text-white/50 text-sm text-center py-4">
-                      Loading episodes...
-                    </div>
+                    <LoadingSpinner wrapperClass="py-10" sizeClass="w-8 h-8" />
                   ) : (
                     episodes.map((ep) => (
                       <div
