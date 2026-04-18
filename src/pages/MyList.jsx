@@ -1,9 +1,11 @@
 import React from "react";
 import { useWatchlist } from "../hooks/useWatchlist";
+import { useModal } from "../hooks/useModal";
 import MoviesCard from "../components/cards/MoviesCard";
 
 function MyList() {
   const { watchlist, isInWatchlist, handleToggleWatchlist } = useWatchlist();
+  const { handleOpenDetail } = useModal();
 
   return (
     <section className="my-list-section px-5 lg:px-20 pt-20 lg:pt-40 min-h-screen pb-20 flex flex-col gap-8">
@@ -26,6 +28,7 @@ function MyList() {
               genreIds={movie.genreIds || []}
               onToggleWatchlist={handleToggleWatchlist}
               isInWatchlist={isInWatchlist}
+              onOpenDetail={handleOpenDetail}
               className="h-60 lg:h-110"
             />
           ))}

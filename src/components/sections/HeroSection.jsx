@@ -2,12 +2,14 @@ import React from "react";
 import { MdInfoOutline, MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import { useIsVisible } from "../../hooks/useIsVisible";
 import { useTrailerVideo } from "../../hooks/useTrailerVideo";
+import { useModal } from "../../hooks/useModal";
 
 function HeroSection({ movie }) {
   const { ref: heroRef, isVisible } = useIsVisible(0.3);
   const { isMuted, showTrailer, toggleMute } = useTrailerVideo(
     movie?.trailerKey,
   );
+  const { handleOpenDetail } = useModal();
 
   if (!movie) return null;
 
@@ -39,8 +41,8 @@ function HeroSection({ movie }) {
           />
         </div>
       )}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-10" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/80 via-transparent to-transparent z-10" />
+      <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent z-10" />
       <div className="absolute inset-0 z-20 flex items-center justify-center pt-8 lg:pt-56">
         <div className="hero-content w-[88.89%] lg:w-7xl flex flex-col items-start text-white gap-3 lg:gap-5">
           <h4 className="text-2xl lg:text-5xl font-bold">{movie.title}</h4>
@@ -52,7 +54,12 @@ function HeroSection({ movie }) {
               <button className="start-button rounded-[48px] bg-primary-3 text-xs lg:text-base font-bold text-white py-1 lg:py-2.5 px-3 lg:px-7 gap-2 flex items-center">
                 Mulai
               </button>
-              <button className="movie-details rounded-[48px] bg-paper-bg text-xs lg:text-base font-bold text-white py-1 lg:py-2.5 px-3 lg:px-7 gap-2 flex items-center">
+              <button
+                onClick={() =>
+                  handleOpenDetail({ id: movie.id, mediaType: movie.mediaType })
+                }
+                className="movie-details rounded-[48px] bg-paper-bg text-xs lg:text-base font-bold text-white py-1 lg:py-2.5 px-3 lg:px-7 gap-2 flex items-center"
+              >
                 <MdInfoOutline size={18} />
                 <span>Selengkapnya</span>
               </button>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaPlay, FaCheck, FaChevronDown, FaStar, FaPlus } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
-import { MOVIE_GENRES, TV_GENRES } from "../../data/genres";
+import { getGenreNames } from "../../utils/mediaMapper";
 
 function MoviesCard({
   id,
@@ -37,11 +37,7 @@ function MoviesCard({
     });
   };
 
-  const genreMap = mediaType === "tv" ? TV_GENRES : MOVIE_GENRES;
-  const genreNames = genreIds
-    .slice(0, 3)
-    .map((id) => genreMap[id])
-    .filter(Boolean);
+  const genreNames = getGenreNames(genreIds, mediaType);
   const year = releaseDate ? new Date(releaseDate).getFullYear() : null;
   const rating = voteAverage ? (voteAverage / 2).toFixed(1) : null;
 

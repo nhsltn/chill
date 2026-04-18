@@ -44,6 +44,8 @@ export function usePageData(fetchFn, mediaType) {
         if (cancelled) return;
 
         setHeroData({
+          id: random.id,
+          mediaType: heroMediaType,
           title: detailRes.data.title || detailRes.data.name,
           overview: detailRes.data.overview || "",
           backdrop: random.backdrop_path

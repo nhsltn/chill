@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import ArrowButton from "../ui/ArrowButton";
 
 function MovieSection({
@@ -12,14 +13,9 @@ function MovieSection({
   itemsPerPage = 5,
   simple = false,
 }) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [startIndex, setStartIndex] = useState(0);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useIsMobile();
 
   const totalPages = Math.ceil(movies.length / itemsPerPage);
   const visibleMovies = movies.slice(startIndex, startIndex + itemsPerPage);

@@ -93,6 +93,7 @@ function Movies() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
     </>
   );
