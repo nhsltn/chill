@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
@@ -6,100 +6,44 @@ import ContinueCard from "../components/cards/ContinueCard";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { useModal } from "../hooks/useModal";
 import { useContinueWatching } from "../hooks/useContinueWatching";
+import { usePageData } from "../hooks/usePageData";
 import {
   getTopRatedTV,
   getTrendingTV,
   getNewReleaseTV,
   getPopularTV,
-  getDataById,
-  getTrailerById,
-  getAgeRating,
 } from "../services/api/tmdb";
-import { pickTrailerKey, parseAgeRating } from "../utils/heroHelpers";
-import {
-  mapMovie,
-  POSTER_BASE_URL,
-  BACKDROP_BASE_URL,
-} from "../utils/mediaMapper";
+import { mapMovie } from "../utils/mediaMapper";
 
 function Series() {
   const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
     useWatchlist();
-
-  const [allTrending, setAllTrending] = useState([]);
-  const continueMovies = useContinueWatching(watchlist, allTrending, "tv");
-  const [topRated, setTopRated] = useState([]);
-  const [trending, setTrending] = useState([]);
-  const [popular, setPopular] = useState([]);
-  const [newRelease, setNewRelease] = useState([]);
-  const [heroData, setHeroData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { handleOpenDetail } = useModal();
 
   const toSeries = (m) => mapMovie(m, "tv");
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchSeries = async () => {
-      setLoading(true);
-      try {
-        const [topRatedRes, trendingRes, newReleaseRes, popularRes] =
-          await Promise.all([
-            getTopRatedTV(),
-            getTrendingTV(),
-            getNewReleaseTV(),
-            getPopularTV(),
-          ]);
-
-        if (cancelled) return;
-
-        setTopRated(topRatedRes.data.results.map(toSeries).slice(0, 10));
-
-        const trendingList = trendingRes.data.results;
-        setTrending(trendingList.map(toSeries).slice(0, 10));
-        setAllTrending(trendingList);
-        setNewRelease(newReleaseRes.data.results.map(toSeries).slice(0, 10));
-        setPopular(popularRes.data.results.map(toSeries).slice(0, 10));
-
-        const randomSeries =
-          trendingList[Math.floor(Math.random() * trendingList.length)];
-
-        const [detailRes, videoRes, ratingRes] = await Promise.all([
-          getDataById(randomSeries.id, "tv"),
-          getTrailerById(randomSeries.id, "tv"),
-          getAgeRating(randomSeries.id, "tv"),
+  const { topRated, trending, newRelease, popular, heroData, loading } =
+    usePageData(async () => {
+      const [topRatedRes, trendingRes, newReleaseRes, popularRes] =
+        await Promise.all([
+          getTopRatedTV(),
+          getTrendingTV(),
+          getNewReleaseTV(),
+          getPopularTV(),
         ]);
 
-        if (cancelled) return;
+      return {
+        lists: {
+          topRated: topRatedRes.data.results.map(toSeries).slice(0, 10),
+          trending: trendingRes.data.results.map(toSeries).slice(0, 10),
+          newRelease: newReleaseRes.data.results.map(toSeries).slice(0, 10),
+          popular: popularRes.data.results.map(toSeries).slice(0, 10),
+        },
+        trendingRaw: trendingRes.data.results,
+      };
+    }, "tv");
 
-        const trailerKey = pickTrailerKey(videoRes.data.results);
-        const ageRating = parseAgeRating(
-          ratingRes.data.results || [],
-          randomSeries.media_type,
-        );
-
-        setHeroData({
-          title: detailRes.data.title || detailRes.data.name,
-          overview: detailRes.data.overview || "",
-          backdrop: randomSeries.backdrop_path
-            ? `${BACKDROP_BASE_URL}${randomSeries.backdrop_path}`
-            : null,
-          trailerKey: trailerKey,
-          ageRating: ageRating || null,
-        });
-      } catch (err) {
-        if (!cancelled) console.error("Gagal fetch series:", err);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    fetchSeries();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const continueMovies = useContinueWatching(watchlist, trending, "tv");
 
   if (loading) {
     return (
@@ -126,6 +70,7 @@ function Series() {
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
         isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
       />
       <MovieSection
         title="Top Rating Series"

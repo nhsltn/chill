@@ -26,14 +26,14 @@ export function useContinueWatching(
       const watchlistIds = new Set(watchlistItems.map((m) => m.id));
 
       const randomFill = allTrending
-        .filter((m) => !watchlistIds.has(m.id) && m.backdrop_path)
+        .filter((m) => !watchlistIds.has(m.id) && m.backdrop)
         .slice(0, needed)
         .map((m) => ({
           id: m.id,
-          title: m.title || m.name,
-          thumbnail: `${BACKDROP_BASE_URL}${m.backdrop_path}`,
+          title: m.title,
+          thumbnail: m.backdrop,
           isNew: false,
-          progress: 10 + (m.id % 71),
+          progress: 10 + (Number(m.id) % 71),
         }));
 
       return [...watchlistItems, ...randomFill];
