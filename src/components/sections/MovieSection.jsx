@@ -30,8 +30,8 @@ function MovieSection({
         <h3 className="lg:text-[32px] text-[20px] font-bold">{title}</h3>
 
         {isMobile ? (
-          <div className="w-full overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4">
+          <div className={`w-full ${simple ? "" : "overflow-x-auto scrollbar-hide"}`}>
+            <div className={`flex ${simple ? "flex-wrap justify-center gap-3" : "gap-4"}`}>
               {movies.map((movie) => (
                 <div key={movie.id} className="flex-none">
                   <CardComponent
