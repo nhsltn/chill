@@ -310,8 +310,10 @@ function DetailCard({
                         key={ep.id}
                         className="flex gap-6 text-text-light-primary font-semibold items-center"
                       >
-                        <p className="ep-number">{ep.episode_number}</p>
-                        <div className="ep-thumbnail w-20 h-10 lg:w-42.5 lg:h-24">
+                        <p className="ep-number w-5 lg:w-8 shrink-0 text-center">
+                          {ep.episode_number}
+                        </p>
+                        <div className="ep-thumbnail shrink-0 w-20 h-10 lg:w-42.5 lg:h-24">
                           <img
                             src={
                               ep.still_path
