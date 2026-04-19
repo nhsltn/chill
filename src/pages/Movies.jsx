@@ -3,68 +3,47 @@ import HeroSection from "../components/sections/HeroSection";
 import MovieSection from "../components/sections/MovieSection";
 import MoviesCard from "../components/cards/MoviesCard";
 import ContinueCard from "../components/cards/ContinueCard";
-import { useWatchlist } from "../hooks/useWatchlist";
 import { useModal } from "../hooks/useModal";
+import { useWatchlist } from "../hooks/useWatchlist";
 import { useContinueWatching } from "../hooks/useContinueWatching";
 import { usePageData } from "../hooks/usePageData";
 import {
   getTopRatedMovies,
-  getTopRatedTV,
   getTrendingMovies,
   getNewReleaseMovies,
-  getTrendingAll,
+  getPopularMovies,
 } from "../services/api/tmdb";
 import { mapMovie } from "../utils/mediaMapper";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
-function Home() {
+function Movies() {
   const { watchlist, isInWatchlist, handleToggleWatchlist, isLoggedIn } =
     useWatchlist();
   const { handleOpenDetail } = useModal();
+  const toMovie = (m) => mapMovie(m, "movie");
 
-  const { allTrending, topRated, trending, newRelease, heroData, loading } =
+  const { topRated, trending, newRelease, popular, heroData, loading } =
     usePageData(async () => {
-      const [
-        topRatedMovieRes,
-        topRatedTVRes,
-        trendingRes,
-        newReleaseRes,
-        trendingAllRes,
-      ] = await Promise.all([
-        getTopRatedMovies(),
-        getTopRatedTV(),
-        getTrendingMovies(),
-        getNewReleaseMovies(),
-        getTrendingAll(),
-      ]);
-
-      const trendingAll = trendingAllRes.data.results;
-
-      const topRatedCombined = [
-        ...topRatedMovieRes.data.results.map((m) => mapMovie(m, "movie")),
-        ...topRatedTVRes.data.results.map((m) => mapMovie(m, "tv")),
-      ]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10);
+      const [topRatedRes, trendingRes, newReleaseRes, popularRes] =
+        await Promise.all([
+          getTopRatedMovies(),
+          getTrendingMovies(),
+          getNewReleaseMovies(),
+          getPopularMovies(),
+        ]);
 
       return {
         lists: {
-          topRated: topRatedCombined,
-          trending: trendingRes.data.results
-            .map((m) => mapMovie(m, "movie"))
-            .slice(0, 10),
-          newRelease: newReleaseRes.data.results
-            .map((m) => mapMovie(m, "movie"))
-            .slice(0, 10),
+          topRated: topRatedRes.data.results.map(toMovie).slice(0, 10),
+          trending: trendingRes.data.results.map(toMovie).slice(0, 10),
+          newRelease: newReleaseRes.data.results.map(toMovie).slice(0, 10),
+          popular: popularRes.data.results.map(toMovie).slice(0, 10),
         },
-        trendingRaw: trendingAll,
+        trendingRaw: trendingRes.data.results,
       };
     }, "movie");
 
-  const mappedTrending = allTrending.map((m) =>
-    mapMovie(m, m.media_type || "movie"),
-  );
-  const continueMovies = useContinueWatching(watchlist, mappedTrending);
+  const continueMovies = useContinueWatching(watchlist, trending, "movie");
 
   if (loading) {
     return <LoadingSpinner />;
@@ -82,7 +61,15 @@ function Home() {
         />
       )}
       <MovieSection
-        title="Top Rating Film dan Series Hari Ini"
+        title="Film Persembahan Chill"
+        movies={popular}
+        CardComponent={MoviesCard}
+        onToggleWatchlist={handleToggleWatchlist}
+        isInWatchlist={isInWatchlist}
+        onOpenDetail={handleOpenDetail}
+      />
+      <MovieSection
+        title="Top Rating Film"
         movies={topRated}
         CardComponent={MoviesCard}
         onToggleWatchlist={handleToggleWatchlist}
@@ -109,4 +96,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Movies;

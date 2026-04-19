@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import AuthCard from "../components/cards/AuthCard";
 import InputField from "../components/ui/InputField";
-import { useAuthStore } from "../stores/authStore";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../store/redux/authSlice";
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { login, loading } = useAuthStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,7 +19,7 @@ function Login() {
       return;
     }
 
-    await login(username, password, navigate);
+    dispatch(loginUser({ username, password, navigate }));
   };
 
   return (

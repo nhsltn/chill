@@ -1,30 +1,11 @@
-import React, { useEffect } from "react";
-import { useAuthStore } from "../stores/authStore";
-import { useWatchlistStore } from "../stores/watchlistStore";
+import React from "react";
+import { useWatchlist } from "../hooks/useWatchlist";
+import { useModal } from "../hooks/useModal";
 import MoviesCard from "../components/cards/MoviesCard";
 
 function MyList() {
-  const { isLoggedIn, user } = useAuthStore();
-  const {
-    fetchWatchlist,
-    toggleWatchlist,
-    isInWatchlist,
-    watchlist,
-    clearWatchlist,
-  } = useWatchlistStore();
-
-  useEffect(() => {
-    if (isLoggedIn && user?.userId) {
-      fetchWatchlist(user.userId);
-    } else {
-      clearWatchlist();
-    }
-  }, [isLoggedIn, user?.userId, fetchWatchlist, clearWatchlist]);
-
-  const handleToggleWatchlist = (movie) => {
-    if (!isLoggedIn) return;
-    toggleWatchlist(user.userId, movie);
-  };
+  const { watchlist, isInWatchlist, handleToggleWatchlist } = useWatchlist();
+  const { handleOpenDetail } = useModal();
 
   return (
     <section className="my-list-section px-5 lg:px-20 pt-20 lg:pt-40 min-h-screen pb-20 flex flex-col gap-8">
@@ -47,6 +28,7 @@ function MyList() {
               genreIds={movie.genreIds || []}
               onToggleWatchlist={handleToggleWatchlist}
               isInWatchlist={isInWatchlist}
+              onOpenDetail={handleOpenDetail}
               className="h-60 lg:h-110"
             />
           ))}

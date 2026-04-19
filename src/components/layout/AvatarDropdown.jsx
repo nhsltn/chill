@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiArrowRightOnRectangle } from "react-icons/hi2";
 import { FaUserLarge, FaStar } from "react-icons/fa6";
-import { useAuthStore } from "../../stores/authStore";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/redux/authSlice";
+import { clearWatchlist } from "../../store/redux/watchlistSlice";
 
 import Avatar from "/assets/images/avatar.png";
 
@@ -16,11 +18,13 @@ const LOGGED_IN_MENU = [
 const LOGGED_OUT_MENU = [{ icon: FaUserLarge, label: "Login", path: "/login" }];
 function AvatarDropdown({ isLoggedIn }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuthStore();
   const menuItems = isLoggedIn ? LOGGED_IN_MENU : LOGGED_OUT_MENU;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
+    dispatch(clearWatchlist());
     setIsOpen(false);
     navigate("/");
   };

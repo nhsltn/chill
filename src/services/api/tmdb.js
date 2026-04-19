@@ -7,7 +7,7 @@ const tmdbClient = axios.create({
     "Content-Type": "application/json",
   },
   params: {
-    language: "id-ID",
+    language: "en-US",
   },
 });
 
@@ -27,6 +27,25 @@ export const getTrendingTV = () => tmdbClient.get("/trending/tv/day");
 
 export const getNewReleaseMovies = () => tmdbClient.get("/movie/now_playing");
 export const getNewReleaseTV = () => tmdbClient.get("/tv/on_the_air");
+
+export const getPopularMovies = () => tmdbClient.get("/movie/popular");
+export const getPopularTV = () => tmdbClient.get("/tv/popular");
+
+export const getCredits = (id, mediaType) =>
+  tmdbClient.get(`/${mediaType}/${id}/credits`, {
+    params: {
+      language: "en-US",
+      include_video_language: "en,id,null",
+    },
+  });
+
+export const getSeasonEpisodes = (id, season = 1) =>
+  tmdbClient.get(`/tv/${id}/season/${season}`, {
+    params: {
+      language: "en-US",
+      include_video_language: "en,id,null",
+    },
+  });
 
 export const getTrendingAll = () =>
   tmdbClient.get("/trending/all/day", {
@@ -55,3 +74,6 @@ export const getAgeRating = (id, mediaType) =>
   tmdbClient.get(
     `/${mediaType}/${id}/${mediaType === "movie" ? "release_dates" : "content_ratings"}`,
   );
+
+export const getSimilarMovies = (id, mediaType) =>
+  tmdbClient.get(`/${mediaType}/${id}/recommendations`);
