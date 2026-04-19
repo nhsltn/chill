@@ -7,7 +7,7 @@ const tmdbClient = axios.create({
     "Content-Type": "application/json",
   },
   params: {
-    language: "id-ID",
+    language: "en-US",
   },
 });
 

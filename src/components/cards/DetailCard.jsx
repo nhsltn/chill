@@ -150,7 +150,7 @@ function DetailCard({
       className="detail-card fixed inset-0 z-100 bg-black/70 overflow-y-auto"
       onClick={handleBackdropClick}
     >
-      <div className="wrapper relative flex flex-col bg-[#181818] rounded-2xl w-233.25 mx-auto mt-20 mb-10">
+      <div className="wrapper relative flex flex-col bg-[#181818] rounded-2xl w-95 lg:w-233.25 mx-auto mt-20 mb-10">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 z-30 bg-black/50 rounded-full p-2 text-white hover:bg-white/20 transition"
@@ -162,7 +162,7 @@ function DetailCard({
           <LoadingSpinner wrapperClass="h-60" />
         ) : (
           <>
-            <div className="relative w-full h-138.5 overflow-hidden rounded-t-2xl shrink-0">
+            <div className="relative w-full h-47.5 lg:h-138.5 overflow-hidden rounded-t-2xl shrink-0">
               <div
                 className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${showTrailer ? "opacity-0" : "opacity-100"}`}
                 style={{ backgroundImage: `url(${backdropUrl})` }}
@@ -179,10 +179,12 @@ function DetailCard({
                 </div>
               )}
               <div className="absolute inset-0 bg-linear-to-t from-[#181818] via-transparent to-transparent" />
-              <div className="absolute flex flex-col gap-6 w-193.25 bottom-30 left-1/2 -translate-x-1/2">
-                <h2 className="text-white text-[32px] font-bold">{title}</h2>
+              <div className="absolute flex flex-col gap-[8.23px] lg:gap-6 w-[265.12px] lg:w-193.25 bottom-10 lg:bottom-30 left-1/2 -translate-x-1/2">
+                <h2 className="text-white text-base lg:text-[32px] font-bold">
+                  {title}
+                </h2>
                 <div className="flex items-center justify-between">
-                  <div className="movie-buttons flex gap-2.5">
+                  <div className="movie-buttons flex gap-2 lg:gap-2.5">
                     <button className="start-button rounded-[48px] bg-primary-3 text-xs lg:text-base font-bold text-white py-1 lg:py-2.5 px-3 lg:px-7 gap-2 flex items-center">
                       Mulai
                     </button>
@@ -203,28 +205,28 @@ function DetailCard({
                           mediaType,
                         })
                       }
-                      className={`flex items-center justify-center border rounded-full size-12 transition-colors shrink-0 ${
+                      className={`flex items-center justify-center border rounded-full size-8 lg:size-12 transition-colors shrink-0 ${
                         inWatchlist
                           ? "bg-white border-white text-black"
                           : "border-white/60 hover:border-white text-white"
                       }`}
                     >
                       {inWatchlist ? (
-                        <FaCheck className="size-6" />
+                        <FaCheck className="size-4 lg:size-6" />
                       ) : (
-                        <FaPlus className="size-6" />
+                        <FaPlus className="size-4 lg:size-6" />
                       )}
                     </button>
                   </div>
                   {showTrailer && (
                     <button
                       onClick={toggleMute}
-                      className="flex items-center justify-center border rounded-full border-white/60 text-white size-12 hover:border-white transition shrink-0"
+                      className="flex items-center justify-center border rounded-full border-white/60 text-white size-8 lg:size-12 hover:border-white transition shrink-0"
                     >
                       {isMuted ? (
-                        <MdVolumeOff className="size-6" />
+                        <MdVolumeOff className="size-4 lg:size-6" />
                       ) : (
-                        <MdVolumeUp className="size-6" />
+                        <MdVolumeUp className="size-4 lg:size-6" />
                       )}
                     </button>
                   )}
@@ -232,9 +234,9 @@ function DetailCard({
               </div>
             </div>
 
-            <div className="detailed-information flex py-6 px-20 w-full gap-2.5">
+            <div className="detailed-information flex lg:flex-row flex-col py-2.5 px-3 lg:py-6 lg:px-20 w-full gap-2.5">
               <div className="overview-content flex-1 flex flex-col gap-1">
-                <div className="vid-main-info flex py-1 gap-4 items-center text-text-light-secondary text-base font-semibold">
+                <div className="vid-main-info flex py-1 gap-4 items-center text-text-light-secondary text-xs lg:text-base font-semibold">
                   <p className="release-date">{year}</p>
                   {mediaType === "tv" && detail?.number_of_episodes && (
                     <p className="episode">
@@ -248,11 +250,11 @@ function DetailCard({
                     {ageRating}
                   </p>
                 </div>
-                <p className="overview text-base text-text-light-primary font-normal">
+                <p className="overview text-xs lg:text-base text-text-light-primary font-normal">
                   {detail.overview}
                 </p>
               </div>
-              <div className="detailed-content flex flex-col flex-1 px-2.5 gap-1 text-base font-normal text-text-light-primary">
+              <div className="detailed-content flex flex-col flex-1 px-2.5 gap-1 text-xs lg:text-base font-normal text-text-light-primary">
                 <div className="cast-info flex gap-1">
                   <p className="w-28 shrink-0 text-text-light-secondary">
                     Cast
@@ -278,9 +280,9 @@ function DetailCard({
             </div>
 
             {mediaType === "tv" ? (
-              <div className="episodes-information flex flex-col gap-7 py-6 px-20">
+              <div className="episodes-information flex flex-col gap-7 py-2.5 px-3 lg:py-6 lg:px-20">
                 <div className="episode-header flex justify-between">
-                  <p className="font-bold text-text-light-primary text-2xl">
+                  <p className="font-bold text-text-light-primary text-base lg:text-2xl">
                     Episode
                   </p>
                   {seasons.length > 1 && (
@@ -289,7 +291,7 @@ function DetailCard({
                       onChange={(e) =>
                         setSelectedSeason(Number(e.target.value))
                       }
-                      className="bg-[#2a2a2a] text-white text-sm border border-white/20 rounded-md px-3 py-1.5 cursor-pointer focus:outline-none w-auto"
+                      className="bg-[#2a2a2a] text-white text-sm border border-white/20 rounded-md px-3 py-1.5 cursor-pointer focus:outline-none w-60 lg:w-auto"
                     >
                       {seasons.map((s) => (
                         <option key={s.season_number} value={s.season_number}>
@@ -299,7 +301,7 @@ function DetailCard({
                     </select>
                   )}
                 </div>
-                <div className="episode-list flex flex-col gap-4 px-6">
+                <div className="episode-list flex flex-col gap-[5.49px] lg:gap-4 px-[8.23px] lg:px-6 text-[10px] lg:text-lg">
                   {episodeLoading ? (
                     <LoadingSpinner wrapperClass="py-10" sizeClass="w-8 h-8" />
                   ) : (
@@ -309,7 +311,7 @@ function DetailCard({
                         className="flex gap-6 text-text-light-primary font-semibold items-center"
                       >
                         <p className="ep-number">{ep.episode_number}</p>
-                        <div className="ep-thumbnail w-42.5 h-24">
+                        <div className="ep-thumbnail w-20 h-10 lg:w-42.5 lg:h-24">
                           <img
                             src={
                               ep.still_path
@@ -320,12 +322,12 @@ function DetailCard({
                             className="w-full h-full rounded-t-sm"
                           />
                         </div>
-                        <div className="ep-detail flex flex-col gap-2.5 w-119">
+                        <div className="ep-detail flex flex-col gap-[3.43px] lg:gap-2.5 w-50 lg:w-119">
                           <div className="ep-detail-header flex justify-between">
                             <p className="ep-name">{ep.name}</p>
                             <p className="ep-runtime">{ep.runtime} min</p>
                           </div>
-                          <p className="text-text-light-secondary font-normal line-clamp-2">
+                          <p className="text-text-light-secondary font-normal line-clamp-1 lg:line-clamp-2">
                             {ep.overview}
                           </p>
                         </div>
